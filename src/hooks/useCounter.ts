@@ -14,7 +14,11 @@ function useCounter(initialValue: number) {
 		setCount(0);
 	}
 
-	return { count, increment, decrement, reset };
+	function setTo(value: number) {
+		setCount(value);
+	}
+
+	return { count, increment, decrement, reset, setTo };
 }
 
 export default useCounter;

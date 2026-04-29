@@ -7,7 +7,7 @@ interface BookCardProps {
 }
 function BookCard({ title, totalPages }: BookCardProps) {
 	const { value: isRead, toggle: toggleRead } = useToggle(false);
-	const { count, increment, decrement, reset } = useCounter(0);
+	const { count, increment, decrement, reset, setTo } = useCounter(0);
 	return (
 		<div>
 			<h3>{title}</h3>
@@ -18,6 +18,13 @@ function BookCard({ title, totalPages }: BookCardProps) {
 			<p>
 				Current: {count} / {totalPages}
 			</p>
+			<input
+				type="number"
+				value={count}
+				onChange={(e) => setTo(Number(e.target.value))}
+				min={0}
+				max={totalPages}
+			/>
 			<button onClick={increment}>+</button>
 			<button onClick={decrement}>-</button>
 			<button onClick={reset}>Reset page</button>
