@@ -1,4 +1,4 @@
-# Module 02 — Custom Hooks
+# Module 02: Custom Hooks
 
 ---
 
@@ -109,19 +109,21 @@ The re-render cost is also manageable here. At medium scale, components that cal
 
 ---
 
-## At large scale — hundreds of engineers, millions of users
+## At large scale (hundreds of engineers, millions of users)
 
 `useFetch` breaks down here and gets replaced. Here is exactly why:
 
-- **Caching.** `useFetch` has no memory. Every time a component mounts it makes a fresh network request. Navigate away from the Books page, come back — loading spinner appears again, same data fetches again from the server. React Query remembers the response from the first fetch and serves it instantly on return, while quietly checking in the background if anything changed. The user sees data immediately instead of a spinner.
+- **Caching.** `useFetch` has no memory. Every time a component mounts, it fires a fresh network request. So if you navigate away from the Books page and come back, the loading spinner appears again and the same data gets fetched from the server again.
+  React Query remembers the response from the first fetch. When you come back to the same page, it serves the cached result instantly. At the same time, it quietly checks in the background whether anything has changed on the server. The user sees data immediately instead of a spinner.
 
 - **Deduplication.** If a navbar, a sidebar, and a main panel all call `useFetch("/api/user")` because they all need the current user's name, three separate network requests go out for identical data. React Query sees three calls to the same URL, makes one request, and gives all three components the same result. The other two never hit the network. At millions of users, three times the requests means three times the server cost.
 
-- **Background refetching.** You open PocketLibrary, your book list loads. You leave the tab open for twenty minutes and come back. `useFetch` shows you data from twenty minutes ago — if anything changed on the server, you'd never know without a manual refresh. React Query detects that you returned to the tab and quietly refetches in the background. Your list updates automatically. The old data stays visible until the new data arrives, so the user never sees a loading spinner.
+- **Background refetching.** `useFetch` has no awareness of time. Once data is loaded, it sits on screen indefinitely. If the server data changes while the user is away, the app has no way of knowing. As an example, a user opens PocketLibrary, the book list loads, and they leave the tab open for twenty minutes. When they come back, they are looking at data from twenty minutes ago. The only way to get fresh data is to manually refresh the page.
+  React Query detects when the user returns to a tab and quietly refetches the data in the background. The old data stays visible until the new data arrives. No loading spinner. No stale results sitting there indefinitely.
 
-- **Stale data management.** React Query lets you define how long data is considered fresh — "this user profile is valid for five minutes, this book list goes stale after thirty seconds." After that time, the next render triggers a background refetch automatically. `useFetch` has no concept of freshness. Data is either loading or loaded. It never questions whether the loaded data is still accurate.
-
-None of these four things are about re-renders. They are about making the relationship between your app and your server intelligent instead of naive. `useFetch` asks the server every single time, trusts nothing, remembers nothing. React Query asks the server only when it needs to, remembers what it learned, and keeps the UI current without the user noticing.
+- **Stale data management.** `useFetch` has no concept of freshness. Data is either loading or it is loaded. Once it is loaded, `useFetch` never questions whether it is still accurate.
+  React Query lets you define exactly how long each piece of data is considered fresh. As an example, a user profile might be set to stay fresh for five minutes, while a book list might be set to go stale after thirty seconds. Once that time is up, the next render automatically triggers a background refetch. The rules are defined once per query and React Query handles the rest.
+  None of these four things are about re-renders. They are about making the relationship between the app and the server intelligent instead of naive. `useFetch` asks the server every single time, trusts nothing, remembers nothing. React Query asks the server only when it needs to, remembers what it learned, and keeps the UI current without the user noticing.
 
 The custom hook pattern is not wrong at large scale. The specific implementation of `useFetch` just hits a ceiling. The right move is to replace the implementation with React Query while keeping the same calling convention in components so components don't care what's underneath.
 

@@ -9,7 +9,6 @@ function useFetch(url: string) {
 		const controller = new AbortController();
 		async function fetchData() {
 			if (!url) return;
-			if (!url) return;
 			setError("");
 			setIsLoading(true);
 			try {
