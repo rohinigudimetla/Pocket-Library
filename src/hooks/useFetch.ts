@@ -6,18 +6,31 @@ function useFetch(url: string) {
 	const [error, setError] = useState("");
 
 	useEffect(() => {
+		const controller = new AbortController();
 		async function fetchData() {
+			if (!url) return;
+			if (!url) return;
+			setError("");
+			setIsLoading(true);
 			try {
-				const response = await fetch(url);
+				const response = await fetch(url, { signal: controller.signal });
+				if (!response.ok) {
+					throw new Error(`HTTP error: ${response.status}`);
+				}
 				const json = await response.json();
+
 				setData(json);
-			} catch (err) {
+			} catch (err: any) {
+				if (err.name === "AbortError") return;
 				setError("Something went wrong");
 			} finally {
 				setIsLoading(false);
 			}
 		}
 		fetchData();
+		return () => {
+			controller.abort();
+		};
 	}, [url]);
 
 	return { data, isLoading, error };
