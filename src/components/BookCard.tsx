@@ -1,16 +1,20 @@
+import { Link } from "react-router-dom";
 import useCounter from "../hooks/useCounter";
 import useToggle from "../hooks/useToggle";
 
 interface BookCardProps {
 	title: string;
 	totalPages: number;
+	id: number;
 }
-function BookCard({ title, totalPages }: BookCardProps) {
+function BookCard({ title, totalPages, id }: BookCardProps) {
 	const { value: isRead, toggle: toggleRead } = useToggle(false);
 	const { count, increment, decrement, reset, setTo } = useCounter(0);
 	return (
 		<div>
-			<h3>{title}</h3>
+			<Link to={`/books/${id}`}>
+				<h3>{title}</h3>
+			</Link>
 			<p>Status: {isRead ? "Read✓" : "Unread"}</p>
 			<button onClick={toggleRead}>
 				{isRead ? "Mark Unread" : "Mark Read"}
