@@ -22,6 +22,8 @@ that did not need any of it. That is the point.
 | ------ | ------------- | -------------------------------------------------------------------- |
 | 02     | Custom Hooks  | [module-02-custom-hooks.md](./decisions/module-02-custom-hooks.md)   |
 | 03     | Data Fetching | [module-03-data-fetching.md](./decisions/module-03-data-fetching.md) |
+| 04     | React Router  | [module-04-react-router.md](./decisions/module-04-react-router.md)   |
+| 05     | Data Fetching | [module-05-complex-forms.md](./decisions/module-05-complex-forms.md) |
 
 ---
 
