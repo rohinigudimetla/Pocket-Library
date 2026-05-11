@@ -31,8 +31,8 @@ that did not need any of it. That is the point.
 | ------ | --------------- | ----------- |
 | 02     | Custom Hooks    | ✅ Complete |
 | 03     | Data Fetching   | ✅ Complete |
-| 04     | React Router    | ⏳ Pending  |
-| 05     | Complex Forms   | ⏳ Pending  |
+| 04     | React Router    | ✅ Complete |
+| 05     | Complex Forms   | ✅ Complete |
 | 06     | Role Based UI   | ⏳ Pending  |
 | 07     | Styling         | ⏳ Pending  |
 | 08     | Spring Boot     | ⏳ Pending  |
