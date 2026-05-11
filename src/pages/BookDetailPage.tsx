@@ -4,8 +4,12 @@ interface BookDetailPageProps {
 }
 function BookDetailPage({ books }: BookDetailPageProps) {
 	const { id } = useParams();
+	console.log("useParams result:", useParams());
+	console.log("id:", id);
+	console.log("type of id:", typeof id);
 	const navigate = useNavigate();
 	const book = books[Number(id)];
+
 	if (!book) return <div>Book not found</div>;
 
 	return (

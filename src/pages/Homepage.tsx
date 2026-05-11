@@ -1,12 +1,11 @@
-import { useState } from "react";
 import FeaturedBook from "../components/FeaturedBook";
 import SearchBooks from "../components/SearchBooks";
-import AddBook from "../components/AddBook";
+import AddBookForm from "../forms/AddBookForm";
 import BookCard from "../components/BookCard";
 
 interface HomePageProps {
 	books: { title: string; totalPages: number }[];
-	onAdd: (title: string) => void;
+	onAdd: (title: string, pageCount: number) => void;
 }
 function HomePage({ books, onAdd }: HomePageProps) {
 	return (
@@ -14,7 +13,7 @@ function HomePage({ books, onAdd }: HomePageProps) {
 			<h1>PocketLibrary</h1>
 			<FeaturedBook />
 			<SearchBooks />
-			<AddBook onAdd={onAdd} />
+			<AddBookForm onAdd={onAdd} />
 			{books.map((book, i) => (
 				<BookCard
 					key={i}

@@ -11,8 +11,8 @@ function App() {
 		{ title: "Dune", totalPages: 412 },
 	]);
 
-	function addBook(title: string) {
-		setBooks([...books, { title, totalPages: 0 }]);
+	function addBook(title: string, pageCount: number) {
+		setBooks([...books, { title, totalPages: pageCount }]);
 	}
 	return (
 		<Routes>

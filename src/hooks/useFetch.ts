@@ -8,8 +8,14 @@ function useFetch(url: string) {
 	useEffect(() => {
 		const controller = new AbortController();
 		async function fetchData() {
-			if (!url) return;
+			if (!url) {
+				// setData(null);
+				// setError("");
+				// setIsLoading(false);
+				return;
+			}
 			setError("");
+			setData(null);
 			setIsLoading(true);
 			try {
 				const response = await fetch(url, { signal: controller.signal });

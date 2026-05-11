@@ -5,9 +5,10 @@ import useFetch from "../hooks/useFetch";
 function SearchBooks() {
 	const [query, setQuery] = useState("");
 	const debouncedQuery = useDebounce(query, 500);
-	const searchUrl = debouncedQuery
-		? `https://openlibrary.org/search.json?q=${debouncedQuery}`
-		: "";
+	const searchUrl =
+		debouncedQuery.length >= 3
+			? `https://openlibrary.org/search.json?q=${debouncedQuery}`
+			: "";
 	const { data, isLoading, error } = useFetch(searchUrl);
 
 	return (
@@ -17,7 +18,7 @@ function SearchBooks() {
 				onChange={(e) => setQuery(e.target.value)}
 				placeholder="Search books..."
 			/>
-			{/* not sure if u remember but its my locked door analogy for left to right stuff */}
+			{/* the locked door analogy for left to right stuff */}
 			{isLoading && <p>Searching...</p>}
 			{error && <p>{error}</p>}
 			{data?.docs?.map((book: any, i: number) => (
