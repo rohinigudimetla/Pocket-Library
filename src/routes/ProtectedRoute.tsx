@@ -1,9 +1,11 @@
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-const isLoggedIn = true;
-
+// const isLoggedIn = true;
+// why usenavigate there and why navigate here
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-	if (!isLoggedIn) return <Navigate to="/" />;
+	const { currentUser } = useAuth();
+	if (!currentUser) return <Navigate to="/login" />;
 	return children;
 }
 

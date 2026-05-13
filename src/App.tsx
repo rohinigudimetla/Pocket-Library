@@ -4,6 +4,7 @@ import BookDetailPage from "./pages/BookDetailPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { useState } from "react";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
 	const [books, setBooks] = useState([
@@ -16,6 +17,7 @@ function App() {
 	}
 	return (
 		<Routes>
+			<Route path="/login" element={<LoginPage />} />
 			<Route path="/" element={<HomePage books={books} onAdd={addBook} />} />
 			<Route
 				path="/books/:id"
