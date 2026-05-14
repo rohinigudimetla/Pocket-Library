@@ -1,9 +1,13 @@
 import { useState } from "react";
 import useDebounce from "../hooks/useDebounce";
 import useFetch from "../hooks/useFetch";
+import { useAuth } from "../context/AuthContext";
+import { useAppContext } from "../context/AppContext";
 
 function SearchBooks() {
 	const [query, setQuery] = useState("");
+	const { currentUser } = useAuth();
+	const { handleRequest, addBook } = useAppContext();
 	const debouncedQuery = useDebounce(query, 500);
 	const searchUrl =
 		debouncedQuery.length >= 3
@@ -18,11 +22,22 @@ function SearchBooks() {
 				onChange={(e) => setQuery(e.target.value)}
 				placeholder="Search books..."
 			/>
-			{/* the locked door analogy for left to right stuff */}
 			{isLoading && <p>Searching...</p>}
 			{error && <p>{error}</p>}
 			{data?.docs?.map((book: any, i: number) => (
-				<p key={i}>{book.title}</p>
+				<div key={i}>
+					<p>{book.title}</p>
+					{currentUser?.role === "reader" && (
+						<button onClick={() => handleRequest(book.title, currentUser.name)}>
+							Request
+						</button>
+					)}
+					{currentUser?.role === "admin" && (
+						<button onClick={() => addBook(book.title, 0)}>
+							Add to Library
+						</button>
+					)}
+				</div>
 			))}
 		</div>
 	);

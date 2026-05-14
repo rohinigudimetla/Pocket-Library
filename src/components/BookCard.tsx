@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import useCounter from "../hooks/useCounter";
 import useToggle from "../hooks/useToggle";
+import type { Book } from "../types";
 
-interface BookCardProps {
-	title: string;
-	totalPages: number;
+interface BookCardProps extends Book {
 	id: number;
 }
 function BookCard({ title, totalPages, id }: BookCardProps) {

@@ -1,13 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
-interface BookDetailPageProps {
-	books: { title: string; totalPages: number }[];
-}
-function BookDetailPage({ books }: BookDetailPageProps) {
+import { useAppContext } from "../context/AppContext";
+
+function BookDetailPage() {
 	const { id } = useParams();
-	console.log("useParams result:", useParams());
-	console.log("id:", id);
-	console.log("type of id:", typeof id);
 	const navigate = useNavigate();
+	const { books } = useAppContext();
 	const book = books[Number(id)];
 
 	if (!book) return <div>Book not found</div>;

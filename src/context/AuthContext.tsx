@@ -1,9 +1,9 @@
 import { createContext, useContext, useState } from "react";
-
-type User = {
-	name: string;
-	role: "reader" | "admin";
-};
+import type { User } from "../types";
+// type User = {
+// 	name: string;
+// 	role: "reader" | "admin";
+// };
 
 const hardcodedUsers = [
 	{
