@@ -6,9 +6,9 @@ actually costs, and when it stops being overkill.
 
 ---
 
-## What this is
+## What this consists of
 
-One user. One book list. No collaboration. The premise never grows.
+Two roles. One shared book list. Reader and Admin. The premise never grows.
 
 The architecture grows through 17 modules: React, Spring Boot, PostgreSQL, Redis, AWS.
 By the end it is a fully deployed, production-grade application built on top of something
@@ -23,7 +23,7 @@ that did not need any of it. That is the point.
 | 02     | Custom Hooks  | [module-02-custom-hooks.md](./decisions/module-02-custom-hooks.md)   |
 | 03     | Data Fetching | [module-03-data-fetching.md](./decisions/module-03-data-fetching.md) |
 | 04     | React Router  | [module-04-react-router.md](./decisions/module-04-react-router.md)   |
-| 05     | Data Fetching | [module-05-complex-forms.md](./decisions/module-05-complex-forms.md) |
+| 05     | Complex Forms | [module-05-complex-forms.md](./decisions/module-05-complex-forms.md) |
 
 ---
 
@@ -35,7 +35,7 @@ that did not need any of it. That is the point.
 | 03     | Data Fetching   | ✅ Complete |
 | 04     | React Router    | ✅ Complete |
 | 05     | Complex Forms   | ✅ Complete |
-| 06     | Role Based UI   | ⏳ Pending  |
+| 06     | Role Based UI   | ✅ Complete |
 | 07     | Styling         | ⏳ Pending  |
 | 08     | Spring Boot     | ⏳ Pending  |
 | 09     | Spring Security | ⏳ Pending  |

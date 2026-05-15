@@ -6,9 +6,10 @@ type AppContextType = {
 	requests: Request[];
 	addBook: (title: string, pageCount: number) => void;
 	handleRequest: (title: string, requestedBy: string) => void;
-	handleAccept: (title: string) => void;
-	handleDismiss: (title: string) => void;
+	handleAccept: (title: string, requestedBy: string) => void;
+	handleDismiss: (title: string, requestedBy: string) => void;
 	handleCancelRequest: (title: string) => void;
+	handleDelete: (title: string) => void;
 };
 
 const AppContext = createContext<AppContextType>({
@@ -19,6 +20,7 @@ const AppContext = createContext<AppContextType>({
 	handleAccept: () => {},
 	handleDismiss: () => {},
 	handleCancelRequest: () => {},
+	handleDelete: () => {},
 });
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
@@ -33,22 +35,38 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	function handleRequest(title: string, requestedBy: string) {
-		setRequests((prev) => [...prev, { title, status: "pending", requestedBy }]);
+		setRequests((prev) => {
+			const existing = prev.find(
+				(r) => r.title === title && r.requestedBy === requestedBy,
+			);
+			if (existing) {
+				return prev.map((r) =>
+					r.title === title && r.requestedBy === requestedBy
+						? { ...r, status: "pending" as const }
+						: r,
+				);
+			}
+			return [...prev, { title, status: "pending", requestedBy }];
+		});
 	}
 
-	function handleAccept(title: string) {
+	function handleAccept(title: string, requestedBy: string) {
 		setBooks((prev) => [...prev, { title, totalPages: 0 }]);
 		setRequests((prev) =>
 			prev.map((r) =>
-				r.title === title ? { ...r, status: "fulfilled" as const } : r,
+				r.title === title && r.requestedBy === requestedBy
+					? { ...r, status: "fulfilled" as const }
+					: r,
 			),
 		);
 	}
 
-	function handleDismiss(title: string) {
+	function handleDismiss(title: string, requestedBy: string) {
 		setRequests((prev) =>
 			prev.map((r) =>
-				r.title === title ? { ...r, status: "dismissed" as const } : r,
+				r.title === title && r.requestedBy === requestedBy
+					? { ...r, status: "dismissed" as const }
+					: r,
 			),
 		);
 	}
@@ -61,6 +79,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 		);
 	}
 
+	function handleDelete(title: string) {
+		setBooks((prev) => prev.filter((b) => b.title !== title));
+	}
+
 	return (
 		<AppContext.Provider
 			value={{
@@ -71,6 +93,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 				handleAccept,
 				handleDismiss,
 				handleCancelRequest,
+				handleDelete,
 			}}
 		>
 			{children}

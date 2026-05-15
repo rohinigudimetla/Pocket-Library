@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import useCounter from "../hooks/useCounter";
 import useToggle from "../hooks/useToggle";
 import type { Book } from "../types";
+import { useAuth } from "../context/AuthContext";
+import { useAppContext } from "../context/AppContext";
 
 interface BookCardProps extends Book {
 	id: number;
@@ -9,6 +11,8 @@ interface BookCardProps extends Book {
 function BookCard({ title, totalPages, id }: BookCardProps) {
 	const { value: isRead, toggle: toggleRead } = useToggle(false);
 	const { count, increment, decrement, reset, setTo } = useCounter(0);
+	const { currentUser } = useAuth();
+	const { handleDelete } = useAppContext();
 	return (
 		<div>
 			<Link to={`/books/${id}`}>
@@ -31,6 +35,9 @@ function BookCard({ title, totalPages, id }: BookCardProps) {
 			<button onClick={increment}>+</button>
 			<button onClick={decrement}>-</button>
 			<button onClick={reset}>Reset page</button>
+			{currentUser?.role === "admin" && (
+				<button onClick={() => handleDelete(title)}>Delete</button>
+			)}
 		</div>
 	);
 }
