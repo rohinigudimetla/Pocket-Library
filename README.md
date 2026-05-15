@@ -24,6 +24,7 @@ that did not need any of it. That is the point.
 | 03     | Data Fetching | [module-03-data-fetching.md](./decisions/module-03-data-fetching.md) |
 | 04     | React Router  | [module-04-react-router.md](./decisions/module-04-react-router.md)   |
 | 05     | Complex Forms | [module-05-complex-forms.md](./decisions/module-05-complex-forms.md) |
+| 06     | Role Based UI | [module-06-role-based-ui.md](./decisions/module-06-role-based-ui.md) |
 
 ---
 
