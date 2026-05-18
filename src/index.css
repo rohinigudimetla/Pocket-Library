@@ -1,111 +1,239 @@
+/* src/index.css
+   PocketLibrary design system — consolidated from Steps 1–5.
+
+   Three-level token hierarchy:
+     • Level 1 — raw primitives (:root, below). Literal values, no meaning.
+     • Level 2 — semantic tokens (@theme, below). Intent. Reference Level 1.
+     • Level 3 — component tokens. Some live on :root (consumed via
+       arbitrary values like w-[var(--sidebar-width)]); some live in
+       @theme to generate Tailwind utility classes (e.g. h-button-md,
+       text-heading-h1). Where each Level 3 token lives is noted inline.
+
+   No component-level class references a raw value. Every utility class
+   used in a component traces back to a Level 1 primitive in this file.
+*/
+
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════════
+   Level 1 — Raw primitives (+ Level 3 :root component tokens)
+   These are NOT exposed as Tailwind utilities.
+   ═══════════════════════════════════════════════════════════════════ */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+	/* ───── Color primitives ───── */
+	--raw-peach-500: #fbdb93;
+	--raw-peach-a40: rgba(251, 219, 147, 0.4); /* warm hairline borders */
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+	--raw-brick-500: #be5b50;
+	--raw-brick-a08: rgba(190, 91, 80, 0.08); /* ghost/secondary hover tint */
+	--raw-brick-a32: rgba(190, 91, 80, 0.32); /* CTA shadow */
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	--raw-rose-500: #8a2d38; /* primary's pressed state */
+	--raw-danger-500: #8a2d38; /* identical to rose today; addressable separately */
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+	--raw-amaranth-500: #641b2e;
+	--raw-amaranth-700: #4a1322;
+	--raw-amaranth-a05: rgba(74, 19, 34, 0.05); /* card shadow ambient */
+	--raw-amaranth-a10: rgba(74, 19, 34, 0.1); /* card shadow key */
+
+	--raw-cream-100: #fff3db; /* page bg gradient — top */
+	--raw-cream-200: #f6e2c2; /* page bg gradient — bottom */
+	--raw-cream-500: #fbf1de; /* flat surface-page */
+
+	--raw-onyx-500: #0c120c;
+	--raw-ink-500: #2a1115;
+	--raw-ink-400: #7a5d5f;
+	--raw-white: #ffffff;
+
+	/* ───── Spacing primitives (px) ───── */
+	--raw-space-1: 4px;
+	--raw-space-2: 8px;
+	--raw-space-3: 12px;
+	--raw-space-4: 16px;
+	--raw-space-5: 20px;
+	--raw-space-6: 24px;
+	--raw-space-8: 32px;
+	--raw-space-10: 40px;
+	--raw-space-11: 44px; /* button height md — HIG min tap target */
+	--raw-space-12: 48px;
+	--raw-space-13: 52px; /* button height lg */
+	--raw-space-16: 64px;
+	--raw-space-20: 80px;
+
+	/* ───── Layout primitives (container-scale, separate namespace) ───── */
+	--raw-layout-sidebar: 240px;
+	--raw-layout-content-max: 1200px;
+
+	/* ───── Radius primitives (px) ───── */
+	--raw-radius-1: 8px;
+	--raw-radius-2: 12px;
+	--raw-radius-3: 18px;
+	--raw-radius-4: 24px;
+	--raw-radius-5: 32px;
+	--raw-radius-6: 40px;
+	--raw-radius-full: 9999px;
+
+	/* ───── Type primitives ───── */
+	--raw-text-13: 13px; /* button sm */
+	--raw-text-14: 14px; /* button md, body */
+	--raw-text-16: 16px; /* button lg */
+	--raw-text-22: 22px; /* heading h2 */
+	--raw-text-30: 30px; /* heading h1 */
+
+	--raw-leading-110: 1.1; /* tight, display headings */
+	--raw-leading-120: 1.2; /* near-tight, section headings */
+
+	--raw-tracking-tight: -0.02em; /* em-relative so it scales with size */
+
+	--raw-font-weight-bold: 700;
+
+	/* ═══════════════════════════════════════════════════════════════
+	   Level 3 — Component tokens consumed via CSS var(), NOT utilities.
+	   These are used in components as e.g. w-[var(--sidebar-width)].
+	   ═══════════════════════════════════════════════════════════════ */
+	--sidebar-width: var(--raw-layout-sidebar);
+	--layout-content-max: var(--raw-layout-content-max);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* ═══════════════════════════════════════════════════════════════════
+   Level 2 — Semantic tokens + Level 3 tokens exposed as utilities.
+   Every value references a Level 1 primitive.
+   No raw hex, rgba, or pixel literals in this block.
+   ═══════════════════════════════════════════════════════════════════ */
+@theme {
+	/* Disable Tailwind's default numeric spacing scale. With this set,
+	   classes like p-4, gap-2, m-8 produce no CSS — only named tokens
+	   (p-inset-md, gap-stack-xl, etc.) generate output. Enforces the
+	   "no numeric Tailwind classes" rule at the CSS layer. */
+	--spacing: initial;
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+	/* ───── Font family ───── */
+	--font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+
+	/* ═══════════════ COLORS ═══════════════ */
+
+	/* Brand & action — used by Button (primary, danger) */
+	--color-primary: var(--raw-brick-500);
+	--color-primary-strong: var(--raw-rose-500); /* primary hover */
+	--color-danger: var(--raw-danger-500);
+	--color-danger-strong: var(--raw-amaranth-500); /* danger hover */
+
+	/* Accent — used by Card.featured highlights, future NavItem active state */
+	--color-accent: var(--raw-peach-500);
+
+	/* Surfaces — used by Card variants & DashboardLayout */
+	--color-surface-page: var(--raw-cream-500); /* flat page surface */
+	--color-surface: var(--raw-white); /* Card.default */
+	--color-surface-sunken: var(--raw-peach-500); /* Card.form */
+	--color-surface-inverse: var(
+		--raw-amaranth-500
+	); /* Card.featured / Sidebar from */
+	--color-surface-inverse-deep: var(
+		--raw-amaranth-700
+	); /* Card.featured / Sidebar to */
+	--color-surface-hover: var(
+		--raw-brick-a08
+	); /* Button ghost/secondary hover */
+
+	/* Text */
+	--color-ink: var(--raw-ink-500);
+	--color-ink-muted: var(--raw-ink-400);
+	--color-on-inverse: var(--raw-white); /* text on amaranth surfaces */
+	--color-on-accent: var(--raw-amaranth-500); /* text on peach surfaces */
+
+	/* Borders */
+	--color-border: var(--raw-peach-a40); /* warm hairline */
+	--color-border-strong: var(--raw-brick-500); /* Input focused */
+
+	/* ═══════════════ SPACING ═══════════════
+	   Naming axes:
+	     • inset  = padding inside a box
+	     • inline = gap between elements on the same line (icon ↔ label)
+	     • stack  = gap between stacked layout regions
+	     • button = component-specific height/width (Level 3 in @theme)
+	*/
+	--spacing-inset-md: var(--raw-space-4); /* 16 — Input/Sidebar/NavItem px */
+	--spacing-inset-lg: var(
+		--raw-space-6
+	); /* 24 — Card p, Button px, Sidebar py */
+	--spacing-inset-xl: var(
+		--raw-space-10
+	); /* 40 — Card.featured p, page gutter */
+
+	--spacing-inline-xs: var(--raw-space-2); /*  8 — Button icon↔label */
+	--spacing-inline-sm: var(
+		--raw-space-3
+	); /* 12 — NavItem icon↔label, Card header gap */
+
+	--spacing-stack-xl: var(
+		--raw-space-10
+	); /* 40 — between DashboardLayout sections */
+
+	--spacing-button-sm: var(--raw-space-8); /* 32 — h-button-sm + w-button-sm */
+	--spacing-button-md: var(--raw-space-11); /* 44 — h-button-md + w-button-md */
+	--spacing-button-lg: var(--raw-space-13); /* 52 — h-button-lg + w-button-lg */
+
+	/* ═══════════════ TYPOGRAPHY ═══════════════ */
+
+	/* Button label sizes — generate text-button-sm / -md / -lg utilities. */
+	--text-button-sm: var(--raw-text-13);
+	--text-button-md: var(--raw-text-14);
+	--text-button-lg: var(--raw-text-16);
+
+	/* Heading typography — each utility (text-heading-h1, text-heading-h2)
+	   sets size + line-height + letter-spacing + font-weight in one class
+	   via v4's compound modifier syntax (--text-{name}--{property}). */
+	--text-heading-h1: var(--raw-text-30);
+	--text-heading-h1--line-height: var(--raw-leading-110);
+	--text-heading-h1--letter-spacing: var(--raw-tracking-tight);
+	--text-heading-h1--font-weight: var(--raw-font-weight-bold);
+
+	--text-heading-h2: var(--raw-text-22);
+	--text-heading-h2--line-height: var(--raw-leading-120);
+	--text-heading-h2--letter-spacing: var(--raw-tracking-tight);
+	--text-heading-h2--font-weight: var(--raw-font-weight-bold);
+
+	/* ═══════════════ RADII ═══════════════ */
+	--radius-control: var(--raw-radius-2); /* 12 — Input, icon Button */
+	--radius-surface: var(--raw-radius-4); /* 24 — Card.default, Card.form */
+	--radius-surface-lg: var(--raw-radius-5); /* 32 — Card.featured, Sidebar */
+	--radius-pill: var(--raw-radius-full); /* Button (non-icon variants) */
+
+	/* ═══════════════ SHADOWS ═══════════════
+	   Built from Level 1 alpha primitives — no raw rgba in this block. */
+	--shadow-card:
+		0 8px 24px var(--raw-amaranth-a10), 0 2px 6px var(--raw-amaranth-a05);
+	--shadow-cta: 0 6px 14px var(--raw-brick-a32);
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+/* ═══════════════════════════════════════════════════════════════════
+   Global page styles
+   Body owns the gradient background; DashboardLayout sits on top with
+   its own bg-surface-page (flat cream). Outside the layout (login,
+   404), the gradient shows through unobstructed.
+   ═══════════════════════════════════════════════════════════════════ */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	/* No universal padding reset — that historically collided with
+	   form-control padding utilities. Tailwind preflight handles the
+	   form-control margin/padding resets we actually need. */
 }
 
 body {
-  margin: 0;
+	font-family: var(--font-sans);
+	color: var(--color-ink);
+	background: linear-gradient(
+		180deg,
+		var(--raw-cream-100) 0%,
+		var(--raw-cream-200) 100%
+	);
+	min-height: 100vh;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+#root {
+	width: 100%;
+	min-height: 100vh;
 }

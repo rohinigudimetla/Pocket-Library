@@ -7,14 +7,14 @@ import type { User } from "../types";
 
 const hardcodedUsers = [
 	{
-		email: "reader@pocket.com",
-		password: "reader123",
+		email: "r@p",
+		password: "r",
 		name: "Rohini",
 		role: "reader" as const,
 	},
 	{
-		email: "admin@pocket.com",
-		password: "admin123",
+		email: "a@p",
+		password: "a",
 		name: "Admin",
 		role: "admin" as const,
 	},
