@@ -6,4 +6,4 @@ export type Request = {
 
 export type User = { name: string; role: "reader" | "admin" };
 
-export type Book = { title: string; totalPages: number };
+export type Book = { title: string; totalPages: number; pagesRead: number };

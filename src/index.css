@@ -224,9 +224,10 @@
 	--spacing-nav-icon: var(--raw-space-10); /* 40px */
 	--spacing-sidebar-width: var(--raw-layout-sidebar); /* 240px */
 
-	--spacing-button-sm: var(--raw-space-8);  /* 32px */
-	--spacing-button-md: var(--raw-space-11); /* 44px */
-	--spacing-button-lg: var(--raw-space-13); /* 52px */
+	--spacing-button-sm: var(--raw-space-8);   /* 32px */
+	--spacing-button-md: var(--raw-space-11);  /* 44px */
+	--spacing-button-lg: var(--raw-space-13);  /* 52px */
+	--spacing-action-col: var(--raw-space-20); /* 80px — fixed request action column */
 
 	/* ═══════════════ WIDTHS ═══════════════ */
 	--max-width-auth-card: 420px;
@@ -312,12 +313,13 @@ body::before {
    Utilities
    ═══════════════════════════════════════════════════════════════════ */
 @layer utilities {
-	/* inset-0 broken by --spacing:initial — re-declare explicitly */
+	/* 0-value utilities broken by --spacing:initial — re-declare explicitly */
 	.inset-0 { inset: 0; }
 	.top-0 { top: 0; }
 	.right-0 { right: 0; }
 	.bottom-0 { bottom: 0; }
 	.left-0 { left: 0; }
+	.min-w-0 { min-width: 0; }
 
 	/* Grain texture overlay */
 	.grain {

@@ -10,6 +10,7 @@ type AppContextType = {
 	handleDismiss: (title: string, requestedBy: string) => void;
 	handleCancelRequest: (title: string) => void;
 	handleDelete: (title: string) => void;
+	updateBookProgress: (title: string, pagesRead: number) => void;
 };
 
 const AppContext = createContext<AppContextType>({
@@ -21,17 +22,24 @@ const AppContext = createContext<AppContextType>({
 	handleDismiss: () => {},
 	handleCancelRequest: () => {},
 	handleDelete: () => {},
+	updateBookProgress: () => {},
 });
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
 	const [books, setBooks] = useState<Book[]>([
-		{ title: "The Great Gatsby", totalPages: 180 },
-		{ title: "Dune", totalPages: 412 },
+		{ title: "The Great Gatsby", totalPages: 180, pagesRead: 0 },
+		{ title: "Dune", totalPages: 412, pagesRead: 0 },
 	]);
 	const [requests, setRequests] = useState<Request[]>([]);
 
 	function addBook(title: string, pageCount: number) {
-		setBooks((prev) => [...prev, { title, totalPages: pageCount }]);
+		setBooks((prev) => [...prev, { title, totalPages: pageCount, pagesRead: 0 }]);
+	}
+
+	function updateBookProgress(title: string, pagesRead: number) {
+		setBooks((prev) =>
+			prev.map((b) => (b.title === title ? { ...b, pagesRead } : b)),
+		);
 	}
 
 	function handleRequest(title: string, requestedBy: string) {
@@ -51,7 +59,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	function handleAccept(title: string, requestedBy: string) {
-		setBooks((prev) => [...prev, { title, totalPages: 0 }]);
+		setBooks((prev) => [...prev, { title, totalPages: 0, pagesRead: 0 }]);
 		setRequests((prev) =>
 			prev.map((r) =>
 				r.title === title && r.requestedBy === requestedBy
@@ -94,6 +102,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 				handleDismiss,
 				handleCancelRequest,
 				handleDelete,
+				updateBookProgress,
 			}}
 		>
 			{children}

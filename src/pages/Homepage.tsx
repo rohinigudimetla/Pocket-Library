@@ -149,6 +149,7 @@ function HomePage() {
 									id={i}
 									title={book.title}
 									totalPages={book.totalPages}
+									pagesRead={book.pagesRead}
 								/>
 							))}
 							{isAdmin && <AddNewCard onClick={() => {}} />}

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import useCounter from "../hooks/useCounter";
 import useToggle from "../hooks/useToggle";
 import type { Book } from "../types";
 import { useAuth } from "../context/AuthContext";
@@ -9,13 +8,22 @@ interface BookCardProps extends Book {
 	id: number;
 }
 
-function BookCard({ title, totalPages, id }: BookCardProps) {
+function BookCard({ title, totalPages, id, pagesRead }: BookCardProps) {
 	const { value: isRead, toggle: toggleRead } = useToggle(false);
-	const { count, increment, decrement, reset } = useCounter(0);
 	const { currentUser } = useAuth();
-	const { handleDelete } = useAppContext();
+	const { handleDelete, updateBookProgress } = useAppContext();
 
-	const pct = totalPages > 0 ? Math.round((count / totalPages) * 100) : 0;
+	const pct = totalPages > 0 ? Math.round((pagesRead / totalPages) * 100) : 0;
+
+	function increment() {
+		updateBookProgress(title, Math.min(totalPages, pagesRead + 1));
+	}
+	function decrement() {
+		updateBookProgress(title, Math.max(0, pagesRead - 1));
+	}
+	function reset() {
+		updateBookProgress(title, 0);
+	}
 
 	return (
 		<div className="bg-surface rounded-surface shadow-card p-inset-md flex flex-col gap-gap-xs">
@@ -69,7 +77,7 @@ function BookCard({ title, totalPages, id }: BookCardProps) {
 			{/* Progress */}
 			<div className="flex justify-between items-center text-caption text-ink-muted">
 				<span>
-					{count} / {totalPages}
+					{pagesRead} / {totalPages}
 				</span>
 				<span className="font-bold text-primary">{pct}%</span>
 			</div>

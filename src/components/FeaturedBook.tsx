@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useAppContext } from "../context/AppContext";
 
 function ProgressRing({ pct, size = 108 }: { pct: number; size?: number }) {
@@ -51,12 +50,13 @@ function ProgressRing({ pct, size = 108 }: { pct: number; size?: number }) {
 function FeaturedBook() {
 	const { books } = useAppContext();
 	const book = books[0] ?? null;
-	const [pagesRead, setPagesRead] = useState(0);
 
 	if (!book) return null;
 
 	const pct =
-		book.totalPages > 0 ? Math.round((pagesRead / book.totalPages) * 100) : 0;
+		book.totalPages > 0
+			? Math.round((book.pagesRead / book.totalPages) * 100)
+			: 0;
 
 	return (
 		<div
@@ -76,13 +76,10 @@ function FeaturedBook() {
 
 			{/* Book cover */}
 			<div
-				className="relative z-[1] flex-shrink-0 rounded-cover bg-cover-bg shadow-book -rotate-3"
+				className="relative z-[1] flex-shrink-0 rounded-cover bg-cover-bg shadow-book -rotate-3 flex items-center justify-center"
 				style={{
 					width: "var(--cover-featured-width)",
 					height: "var(--cover-featured-height)",
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "center",
 				}}
 			>
 				<svg
@@ -127,35 +124,12 @@ function FeaturedBook() {
 					<span style={{ width: `${pct}%`, background: "var(--color-accent)" }} />
 				</div>
 				<p className="text-caption text-on-inverse-soft">
-					{pagesRead} / {book.totalPages} pages read
+					{book.pagesRead} / {book.totalPages} pages read
 				</p>
-
-				{/* Page controls */}
-				<div className="flex items-center gap-gap-xs mt-gap-sm">
-					<button
-						onClick={() => setPagesRead((p) => Math.max(0, p - 1))}
-						className="w-button-sm h-button-sm rounded-pill border-[1.5px] border-[rgba(255,255,255,.2)] bg-[rgba(255,255,255,.08)] text-on-inverse flex items-center justify-center transition-colors hover:bg-[rgba(255,255,255,.16)]"
-					>
-						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-							<line x1="5" y1="12" x2="19" y2="12" />
-						</svg>
-					</button>
-					<button
-						onClick={() =>
-							setPagesRead((p) => Math.min(book.totalPages, p + 1))
-						}
-						className="w-button-sm h-button-sm rounded-pill border-[1.5px] border-[rgba(255,255,255,.2)] bg-[rgba(255,255,255,.08)] text-on-inverse flex items-center justify-center transition-colors hover:bg-[rgba(255,255,255,.16)]"
-					>
-						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-							<line x1="12" y1="5" x2="12" y2="19" />
-							<line x1="5" y1="12" x2="19" y2="12" />
-						</svg>
-					</button>
-				</div>
 			</div>
 
 			{/* Progress ring */}
-			<div className="relative z-[1] self-center">
+			<div className="relative z-[1] self-center flex-shrink-0">
 				<ProgressRing pct={pct} size={108} />
 			</div>
 		</div>

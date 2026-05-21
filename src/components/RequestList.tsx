@@ -13,13 +13,6 @@ function RequestList() {
 		? requests.filter((r) => r.status === "pending")
 		: requests.filter((r) => r.requestedBy === currentUser.name);
 
-	const statusBadge: Record<string, string> = {
-		pending: "badge-pending",
-		fulfilled: "badge-fulfilled",
-		cancelled: "badge-cancelled",
-		dismissed: "badge-cancelled",
-	};
-
 	return (
 		<div className="bg-surface rounded-surface shadow-card p-inset-md flex flex-col">
 			{/* Header */}
@@ -33,6 +26,7 @@ function RequestList() {
 			{visible.length === 0 ? (
 				<div className="flex-1 flex flex-col items-center justify-center text-center gap-gap-xs py-inset-lg">
 					<div className="w-button-md h-button-md rounded-control bg-surface-page flex items-center justify-center">
+						{/* Inbox icon */}
 						<svg
 							width="22"
 							height="22"
@@ -43,7 +37,8 @@ function RequestList() {
 							strokeLinecap="round"
 							strokeLinejoin="round"
 						>
-							<path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+							<polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+							<path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
 						</svg>
 					</div>
 					<p className="text-caption text-ink-muted">
@@ -78,6 +73,7 @@ function RequestList() {
 								</svg>
 							</div>
 
+							{/* Text */}
 							<div className="flex-1 min-w-0">
 								<p className="text-button-md font-bold text-ink truncate">
 									{r.title}
@@ -87,69 +83,69 @@ function RequestList() {
 								</p>
 							</div>
 
-							{isAdmin && r.status === "pending" && (
-								<div className="flex gap-gap-xxs flex-shrink-0">
-									<button
-										onClick={() => handleAccept(r.title, r.requestedBy)}
-										className="w-button-sm h-button-sm rounded-pill bg-primary-strong border-[1.5px] border-primary-strong text-on-inverse flex items-center justify-center hover:bg-danger transition-colors"
-									>
-										<svg
-											width="14"
-											height="14"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="2.4"
-											strokeLinecap="round"
-											strokeLinejoin="round"
+							{/* Action — fixed width to prevent layout shift */}
+							<div className="flex-shrink-0 flex justify-end items-center min-w-action-col">
+								{isAdmin && r.status === "pending" && (
+									<div className="flex gap-gap-xxs">
+										<button
+											onClick={() => handleAccept(r.title, r.requestedBy)}
+											className="w-button-sm h-button-sm rounded-pill bg-primary-strong border-[1.5px] border-primary-strong text-on-inverse flex items-center justify-center hover:bg-danger transition-colors"
 										>
-											<polyline points="20 6 9 17 4 12" />
-										</svg>
-									</button>
-									<button
-										onClick={() => handleDismiss(r.title, r.requestedBy)}
-										className="w-button-sm h-button-sm rounded-pill border-[1.5px] border-[rgba(138,45,56,.25)] bg-surface text-danger flex items-center justify-center hover:bg-[rgba(138,45,56,.08)] transition-colors"
-									>
-										<svg
-											width="14"
-											height="14"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="2.4"
-											strokeLinecap="round"
+											<svg
+												width="14"
+												height="14"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												strokeWidth="2.4"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											>
+												<polyline points="20 6 9 17 4 12" />
+											</svg>
+										</button>
+										<button
+											onClick={() => handleDismiss(r.title, r.requestedBy)}
+											className="w-button-sm h-button-sm rounded-pill border-[1.5px] border-[rgba(138,45,56,.25)] bg-surface text-danger flex items-center justify-center hover:bg-[rgba(138,45,56,.08)] transition-colors"
 										>
-											<line x1="5" y1="12" x2="19" y2="12" />
-										</svg>
-									</button>
-								</div>
-							)}
+											<svg
+												width="14"
+												height="14"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												strokeWidth="2.4"
+												strokeLinecap="round"
+											>
+												<line x1="5" y1="12" x2="19" y2="12" />
+											</svg>
+										</button>
+									</div>
+								)}
 
-							{!isAdmin && (
-								<>
-									{r.status === "pending" && (
-										<button
-											onClick={() => handleCancelRequest(r.title)}
-											className={`${statusBadge[r.status] ?? "badge-pending"} border-none cursor-pointer flex-shrink-0`}
-										>
-											{r.status}
-										</button>
-									)}
-									{r.status !== "pending" && (
-										<span className={`${statusBadge[r.status] ?? "badge-cancelled"} flex-shrink-0`}>
-											{r.status}
-										</span>
-									)}
-									{r.status === "cancelled" && (
-										<button
-											onClick={() => handleRequest(r.title, currentUser.name)}
-											className="text-caption font-semibold text-primary ml-gap-xxs cursor-pointer border-none bg-transparent"
-										>
-											Re-request
-										</button>
-									)}
-								</>
-							)}
+								{!isAdmin && r.status === "pending" && (
+									<button
+										onClick={() => handleCancelRequest(r.title)}
+										className="badge-pending border-none cursor-pointer"
+									>
+										Pending
+									</button>
+								)}
+								{!isAdmin && r.status === "cancelled" && (
+									<button
+										onClick={() => handleRequest(r.title, currentUser.name)}
+										className="text-caption font-medium text-primary-strong bg-surface-page border-[1.5px] border-border-warm rounded-pill px-[10px] py-[4px] cursor-pointer hover:bg-surface-warm transition-colors whitespace-nowrap"
+									>
+										Request
+									</button>
+								)}
+								{!isAdmin && r.status === "fulfilled" && (
+									<span className="badge-fulfilled">Fulfilled</span>
+								)}
+								{!isAdmin && r.status === "dismissed" && (
+									<span className="badge-cancelled">Dismissed</span>
+								)}
+							</div>
 						</div>
 					))}
 				</div>
