@@ -200,7 +200,7 @@
 	--spacing-button-lg: var(--raw-space-13); /* 52 — h-button-lg + w-button-lg */
 
 	/* ═══════════════ WIDTHS ═══════════════ */
-	--width-auth-card: 420px; /* login/auth card max-width */
+	--max-width-auth-card: 420px; /* login/auth card max-width */
 
 	/* ═══════════════ TYPOGRAPHY ═══════════════ */
 
