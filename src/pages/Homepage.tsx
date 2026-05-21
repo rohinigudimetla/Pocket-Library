@@ -12,20 +12,16 @@ function HomePage() {
 	const { currentUser } = useAuth();
 
 	return (
-		<div className="min-h-screen bg-surface-page">
+		<div className="min-h-screen">
 			<Sidebar />
-			<main className="ml-[var(--sidebar-width)] p-inset-xl">
-				<div
-					className="max-w-[var(--layout-content-max)] mx-auto flex flex-col gap-stack-xl"
-				>
+			<main className="ml-[240px] p-10">
+				<div className="max-w-5xl mx-auto flex flex-col gap-8">
 					{/* Greeting */}
 					<div>
-						<h1 className="text-heading-h1 text-ink">
+						<h1 className="text-3xl font-bold text-ink">
 							Good afternoon, {currentUser?.name} 👋
 						</h1>
-						<p className="text-button-md text-ink-muted mt-[6px]">
-							Pick up where you left off.
-						</p>
+						<p className="text-ink-muted mt-1">Pick up where you left off.</p>
 					</div>
 
 					<FeaturedBook />
@@ -35,10 +31,8 @@ function HomePage() {
 
 					{/* Books grid */}
 					<div>
-						<h2 className="text-heading-h2 text-ink mb-inset-lg">
-							Your Books
-						</h2>
-						<div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-inset-lg">
+						<h2 className="text-xl font-bold text-ink mb-4">Your Books</h2>
+						<div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6">
 							{books.map((book, i) => (
 								<BookCard
 									key={i}

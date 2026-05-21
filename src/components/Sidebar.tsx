@@ -6,35 +6,31 @@ function Sidebar() {
 
 	return (
 		<aside
-			className="noise fixed left-0 top-0 h-screen w-[var(--sidebar-width)] flex flex-col justify-between py-[32px] px-inset-lg overflow-hidden"
+			className="fixed left-0 top-0 h-screen w-[240px] flex flex-col justify-between py-8 px-6 overflow-hidden"
 			style={{
-				background:
-					"linear-gradient(180deg, var(--raw-amaranth-600) 0%, var(--raw-amaranth-500) 100%)",
+				background: "linear-gradient(180deg, #7B1835 0%, #641B2E 100%)",
 			}}
 		>
 			{/* Background blob */}
 			<img
 				src="/singleBlob.svg"
-				className="absolute -bottom-[64px] -left-[64px] w-[280px] opacity-30 pointer-events-none"
-				aria-hidden="true"
+				className="absolute -bottom-16 -left-16 w-[280px] opacity-30 pointer-events-none"
 			/>
 
 			{/* Top: logo + nav */}
 			<div className="relative z-10">
-				<div className="flex items-center gap-inline-sm mb-inset-xl">
-					<div className="w-[36px] h-[36px] rounded-control bg-accent flex items-center justify-center flex-shrink-0">
-						<span className="text-on-accent font-bold text-button-md">PL</span>
+				<div className="flex items-center gap-3 mb-10">
+					<div className="w-9 h-9 rounded-xl bg-peach flex items-center justify-center">
+						<span className="text-amaranth font-bold text-sm">PL</span>
 					</div>
-					<span className="text-on-inverse font-bold text-button-lg">
-						PocketLibrary
-					</span>
+					<span className="text-white font-bold text-lg">PocketLibrary</span>
 				</div>
 
-				<nav className="flex flex-col gap-inline-xs">
+				<nav className="flex flex-col gap-2">
 					<NavLink
 						to="/"
 						className={({ isActive }) =>
-							`flex items-center gap-inline-sm px-inset-md py-[12px] rounded-pill text-button-md font-medium transition-all ${isActive ? "bg-accent text-on-accent font-semibold" : "text-on-inverse/70 hover:text-on-inverse hover:bg-on-inverse/10"}`
+							`flex items-center gap-3 px-4 py-3 rounded-full text-sm font-medium transition-all ${isActive ? "bg-peach text-amaranth" : "text-white/70 hover:text-white hover:bg-white/10"}`
 						}
 					>
 						Home
@@ -42,7 +38,7 @@ function Sidebar() {
 					<NavLink
 						to="/requests"
 						className={({ isActive }) =>
-							`flex items-center gap-inline-sm px-inset-md py-[12px] rounded-pill text-button-md font-medium transition-all ${isActive ? "bg-accent text-on-accent font-semibold" : "text-on-inverse/70 hover:text-on-inverse hover:bg-on-inverse/10"}`
+							`flex items-center gap-3 px-4 py-3 rounded-full text-sm font-medium transition-all ${isActive ? "bg-peach text-amaranth" : "text-white/70 hover:text-white hover:bg-white/10"}`
 						}
 					>
 						Requests
@@ -52,24 +48,24 @@ function Sidebar() {
 
 			{/* Bottom: user info + logout */}
 			<div className="relative z-10">
-				<div className="flex items-center gap-inline-sm mb-inset-md px-[8px]">
-					<div className="w-[36px] h-[36px] rounded-pill bg-on-inverse/10 flex items-center justify-center flex-shrink-0">
-						<span className="text-accent text-button-md font-semibold">
+				<div className="flex items-center gap-3 mb-4 px-2">
+					<div className="w-9 h-9 rounded-full bg-peach/20 flex items-center justify-center">
+						<span className="text-peach text-sm font-semibold">
 							{currentUser?.name?.charAt(0)}
 						</span>
 					</div>
 					<div>
-						<p className="text-on-inverse text-button-md font-medium">
+						<p className="text-white text-sm font-medium">
 							{currentUser?.name}
 						</p>
-						<p className="text-on-inverse/50 text-[12px] capitalize">
+						<p className="text-white/50 text-xs capitalize">
 							{currentUser?.role}
 						</p>
 					</div>
 				</div>
 				<button
 					onClick={logout}
-					className="w-full flex items-center gap-inline-sm px-inset-md py-[12px] rounded-pill text-button-md font-medium text-on-inverse/70 hover:text-on-inverse hover:bg-on-inverse/10 transition-all"
+					className="w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all"
 				>
 					Logout
 				</button>
