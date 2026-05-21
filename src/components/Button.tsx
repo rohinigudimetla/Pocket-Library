@@ -23,7 +23,7 @@ const baseClass = [
 const variantClass: Record<Variant, string> = {
 	primary: [
 		"rounded-pill bg-primary text-on-inverse shadow-cta",
-		"hover:bg-primary-strong",
+		"hover:bg-primary-hover",
 		"disabled:bg-surface-sunken disabled:text-ink-muted disabled:shadow-none disabled:hover:bg-surface-sunken",
 	].join(" "),
 	secondary: [

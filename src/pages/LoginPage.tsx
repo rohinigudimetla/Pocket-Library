@@ -21,21 +21,16 @@ function LoginPage() {
 	}
 
 	return (
-		<div
-			className="min-h-screen w-full flex items-center justify-center p-inset-lg"
-			style={{
-				backgroundImage: "url(/loginBg.png)",
-				backgroundSize: "cover",
-				backgroundPosition: "center",
-			}}
-		>
-			<div className="w-full max-w-[420px] bg-surface rounded-surface-lg shadow-card p-inset-xl">
-				{/* Logo */}
-				<div className="flex flex-col items-center mb-inset-lg">
-					<div className="w-inset-xl h-inset-xl rounded-surface bg-surface-sunken flex items-center justify-center mb-inset-md">
+		<div className="min-h-screen flex items-center justify-center p-inset-lg">
+			{/* Outer peach card — grain texture wraps the white inner card */}
+			<div className="noise relative w-full max-w-[420px] bg-surface-sunken rounded-surface-lg p-[30px] shadow-card overflow-hidden">
+				{/* Inner white card */}
+				<div className="bg-surface rounded-surface p-[36px_28px_28px] shadow-card-soft">
+					{/* Logo icon */}
+					<div className="w-[56px] h-[56px] mx-auto rounded-[var(--radius-icon)] bg-accent-soft flex items-center justify-center">
 						<svg
-							width="28"
-							height="28"
+							width="26"
+							height="26"
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="var(--color-primary)"
@@ -47,83 +42,115 @@ function LoginPage() {
 							<path d="M21 5a2 2 0 0 0-2-2h-5v17h5a2 2 0 0 0 2-2V5z" />
 						</svg>
 					</div>
-					<h1 className="text-heading-h1 text-ink">Welcome back!</h1>
-					<p className="text-button-md text-ink-muted mt-inset-md">
-						Sign in to continue to PocketLibrary
-					</p>
-				</div>
 
-				<form onSubmit={handleSubmit} className="flex flex-col gap-inset-md">
-					{/* Email */}
-					<div className="relative">
-						<span className="absolute left-inset-md top-1/2 -translate-y-1/2 text-ink-muted">
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							>
-								<rect x="3" y="5" width="18" height="14" rx="2" />
-								<path d="m3 7 9 6 9-6" />
-							</svg>
-						</span>
-						<input
-							type="email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							placeholder="Email"
-							className="w-full h-button-md bg-surface border border-border text-ink text-button-md placeholder:text-ink-muted rounded-control pl-inset-xl pr-inset-md outline-none focus:border-border-strong transition"
-						/>
+					{/* Heading */}
+					<div className="text-center mt-[14px]">
+						<h1 className="text-heading-h2 text-ink">Welcome back!</h1>
+						<p className="text-button-sm text-ink-muted mt-[4px]">
+							Sign in to continue to PocketLibrary
+						</p>
 					</div>
 
-					{/* Password */}
-					<div className="relative">
-						<span className="absolute left-inset-md top-1/2 -translate-y-1/2 text-ink-muted">
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							>
-								<rect x="4" y="11" width="16" height="10" rx="2" />
-								<path d="M8 11V7a4 4 0 0 1 8 0v4" />
-							</svg>
-						</span>
-						<input
-							type="password"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							placeholder="Password"
-							className="w-full h-button-md bg-surface border border-border text-ink text-button-md placeholder:text-ink-muted rounded-control pl-inset-xl pr-inset-md outline-none focus:border-border-strong transition"
-						/>
-					</div>
-
-					{error && (
-						<p className="text-button-sm font-semibold text-primary">{error}</p>
-					)}
-
-					<Button
-						type="submit"
-						variant="primary"
-						size="md"
-						className="w-full mt-inset-md"
+					{/* Form */}
+					<form
+						onSubmit={handleSubmit}
+						className="flex flex-col gap-[12px] mt-[22px]"
 					>
-						Sign In
-					</Button>
-				</form>
+						{/* Email */}
+						<div className="relative">
+							<span className="absolute left-[14px] top-1/2 -translate-y-1/2 text-ink-placeholder flex pointer-events-none">
+								<svg
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+								>
+									<rect x="3" y="5" width="18" height="14" rx="2" />
+									<path d="m3 7 9 6 9-6" />
+								</svg>
+							</span>
+							<input
+								type="email"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								placeholder="Email"
+								className="w-full text-button-md bg-surface border-[1.5px] border-border-warm text-ink placeholder:text-ink-placeholder rounded-control py-[12px] pl-[42px] pr-[14px] outline-none focus:border-border-strong focus:shadow-input-focus transition-[border-color,box-shadow]"
+							/>
+						</div>
 
-				<p className="text-center text-button-sm text-ink-muted mt-inset-lg">
-					Don't have an account?{" "}
-					<span className="text-primary font-semibold">Contact admin.</span>
-				</p>
+						{/* Password */}
+						<div className="relative">
+							<span className="absolute left-[14px] top-1/2 -translate-y-1/2 text-ink-placeholder flex pointer-events-none">
+								<svg
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+								>
+									<rect x="4" y="11" width="16" height="10" rx="2" />
+									<path d="M8 11V7a4 4 0 0 1 8 0v4" />
+								</svg>
+							</span>
+							<input
+								type="password"
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								placeholder="Password"
+								className="w-full text-button-md bg-surface border-[1.5px] border-border-warm text-ink placeholder:text-ink-placeholder rounded-control py-[12px] pl-[42px] pr-[14px] outline-none focus:border-border-strong focus:shadow-input-focus transition-[border-color,box-shadow]"
+							/>
+						</div>
+
+						{/* Error / spacer row */}
+						<div className="flex justify-start min-h-[16px]">
+							{error && (
+								<span className="text-button-sm font-semibold text-primary">
+									{error}
+								</span>
+							)}
+						</div>
+
+						<Button type="submit" variant="primary" size="md" className="w-full">
+							Sign In
+						</Button>
+					</form>
+
+					{/* Footer */}
+					<p className="text-center text-button-sm text-ink-muted mt-[14px]">
+						Don't have an account?{" "}
+						<span className="text-primary font-semibold">Contact admin.</span>
+					</p>
+
+					{/* Demo credentials hint */}
+					<div className="mt-[16px] bg-accent-soft rounded-control p-[10px_14px] text-button-sm text-ink-muted leading-[1.7]">
+						<strong className="text-ink">Demo credentials</strong>
+						<br />
+						Reader:{" "}
+						<code className="bg-surface rounded-[4px] px-[5px] py-[1px]">
+							r@p
+						</code>{" "}
+						/{" "}
+						<code className="bg-surface rounded-[4px] px-[5px] py-[1px]">
+							r
+						</code>
+						<br />
+						Admin:{" "}
+						<code className="bg-surface rounded-[4px] px-[5px] py-[1px]">
+							a@p
+						</code>{" "}
+						/{" "}
+						<code className="bg-surface rounded-[4px] px-[5px] py-[1px]">
+							a
+						</code>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

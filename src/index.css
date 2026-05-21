@@ -23,26 +23,34 @@
 	/* ───── Color primitives ───── */
 	--raw-peach-500: #fbdb93;
 	--raw-peach-a40: rgba(251, 219, 147, 0.4); /* warm hairline borders */
+	--raw-peach-soft: #ffefcb; /* icon bg, hint surface */
 
 	--raw-brick-500: #be5b50;
+	--raw-brick-600: #b14f44; /* primary hover */
 	--raw-brick-a08: rgba(190, 91, 80, 0.08); /* ghost/secondary hover tint */
+	--raw-brick-a12: rgba(190, 91, 80, 0.12); /* input focus ring */
 	--raw-brick-a32: rgba(190, 91, 80, 0.32); /* CTA shadow */
 
 	--raw-rose-500: #8a2d38; /* primary's pressed state */
 	--raw-danger-500: #8a2d38; /* identical to rose today; addressable separately */
 
 	--raw-amaranth-500: #641b2e;
+	--raw-amaranth-600: #7b1835; /* sidebar gradient from-color */
 	--raw-amaranth-700: #4a1322;
 	--raw-amaranth-a05: rgba(74, 19, 34, 0.05); /* card shadow ambient */
+	--raw-amaranth-a06: rgba(74, 19, 34, 0.06); /* card-soft shadow */
 	--raw-amaranth-a10: rgba(74, 19, 34, 0.1); /* card shadow key */
 
 	--raw-cream-100: #fff3db; /* page bg gradient — top */
 	--raw-cream-200: #f6e2c2; /* page bg gradient — bottom */
 	--raw-cream-500: #fbf1de; /* flat surface-page */
 
+	--raw-border-warm: #eadbc2; /* input border resting */
+
 	--raw-onyx-500: #0c120c;
 	--raw-ink-500: #2a1115;
 	--raw-ink-400: #7a5d5f;
+	--raw-ink-200: #b59c8a; /* placeholder text */
 	--raw-white: #ffffff;
 
 	/* ───── Spacing primitives (px) ───── */
@@ -72,6 +80,7 @@
 	--raw-radius-5: 32px;
 	--raw-radius-6: 40px;
 	--raw-radius-full: 9999px;
+	--raw-radius-icon: 14px; /* icon container bg */
 
 	/* ───── Type primitives ───── */
 	--raw-text-13: 13px; /* button sm */
@@ -114,12 +123,14 @@
 
 	/* Brand & action — used by Button (primary, danger) */
 	--color-primary: var(--raw-brick-500);
-	--color-primary-strong: var(--raw-rose-500); /* primary hover */
+	--color-primary-hover: var(--raw-brick-600); /* primary bg on hover */
+	--color-primary-strong: var(--raw-rose-500); /* primary pressed / active nav */
 	--color-danger: var(--raw-danger-500);
 	--color-danger-strong: var(--raw-amaranth-500); /* danger hover */
 
 	/* Accent — used by Card.featured highlights, future NavItem active state */
 	--color-accent: var(--raw-peach-500);
+	--color-accent-soft: var(--raw-peach-soft); /* icon bg, hint surface */
 
 	/* Surfaces — used by Card variants & DashboardLayout */
 	--color-surface-page: var(--raw-cream-500); /* flat page surface */
@@ -138,12 +149,14 @@
 	/* Text */
 	--color-ink: var(--raw-ink-500);
 	--color-ink-muted: var(--raw-ink-400);
+	--color-ink-placeholder: var(--raw-ink-200); /* input placeholder */
 	--color-on-inverse: var(--raw-white); /* text on amaranth surfaces */
 	--color-on-accent: var(--raw-amaranth-500); /* text on peach surfaces */
 
 	/* Borders */
 	--color-border: var(--raw-peach-a40); /* warm hairline */
-	--color-border-strong: var(--raw-brick-500); /* Input focused */
+	--color-border-warm: var(--raw-border-warm); /* input resting border */
+	--color-border-strong: var(--raw-brick-500); /* input focused border */
 
 	/* ═══════════════ SPACING ═══════════════
 	   Naming axes:
@@ -198,12 +211,15 @@
 	--radius-surface: var(--raw-radius-4); /* 24 — Card.default, Card.form */
 	--radius-surface-lg: var(--raw-radius-5); /* 32 — Card.featured, Sidebar */
 	--radius-pill: var(--raw-radius-full); /* Button (non-icon variants) */
+	--radius-icon: var(--raw-radius-icon); /* 14 — icon container bg */
 
 	/* ═══════════════ SHADOWS ═══════════════
 	   Built from Level 1 alpha primitives — no raw rgba in this block. */
 	--shadow-card:
 		0 8px 24px var(--raw-amaranth-a10), 0 2px 6px var(--raw-amaranth-a05);
+	--shadow-card-soft: 0 4px 16px var(--raw-amaranth-a06); /* inner white card */
 	--shadow-cta: 0 6px 14px var(--raw-brick-a32);
+	--shadow-input-focus: 0 0 0 3px var(--raw-brick-a12); /* focus ring on inputs */
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -233,7 +249,48 @@ body {
 	text-rendering: optimizeLegibility;
 }
 
+/* Subtle page-level grain — sits above the gradient, below all content */
+body::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 0;
+	opacity: 0.1;
+	mix-blend-mode: overlay;
+	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
 #root {
 	width: 100%;
 	min-height: 100vh;
+	position: relative;
+	z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Utilities
+   ═══════════════════════════════════════════════════════════════════ */
+
+@layer utilities {
+	/* Grain texture overlay for elevated surfaces (cards, sidebar, hero).
+	   Apply to the surface element; add overflow-hidden to clip the grain
+	   at the element's border-radius. */
+	.noise::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		z-index: 1;
+		opacity: 0.18;
+		mix-blend-mode: overlay;
+		border-radius: inherit;
+		background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+	}
+
+	/* Direct children need relative + z-index so they render above the grain */
+	.noise > * {
+		position: relative;
+		z-index: 0;
+	}
 }
