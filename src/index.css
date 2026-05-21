@@ -23,7 +23,6 @@
 	/* ───── Color primitives ───── */
 	--raw-peach-500: #fbdb93;
 	--raw-peach-a40: rgba(251, 219, 147, 0.4); /* warm hairline borders */
-	--raw-peach-soft: #ffefcb; /* icon bg, hint surface */
 
 	--raw-brick-500: #be5b50;
 	--raw-brick-600: #b14f44; /* primary hover */
@@ -60,11 +59,14 @@
 	--raw-space-4: 16px;
 	--raw-space-5: 20px;
 	--raw-space-6: 24px;
+	--raw-space-7: 28px;   /* card side/bottom padding */
 	--raw-space-8: 32px;
+	--raw-space-9: 36px;   /* card top padding */
 	--raw-space-10: 40px;
 	--raw-space-11: 44px; /* button height md — HIG min tap target */
 	--raw-space-12: 48px;
 	--raw-space-13: 52px; /* button height lg */
+	--raw-space-14: 56px;  /* icon container size */
 	--raw-space-16: 64px;
 	--raw-space-20: 80px;
 
@@ -80,7 +82,7 @@
 	--raw-radius-5: 32px;
 	--raw-radius-6: 40px;
 	--raw-radius-full: 9999px;
-	--raw-radius-icon: 14px; /* icon container bg */
+	--raw-radius-icon: 16px; /* icon container bg */
 
 	/* ───── Type primitives ───── */
 	--raw-text-13: 13px; /* button sm */
@@ -130,7 +132,6 @@
 
 	/* Accent — used by Card.featured highlights, future NavItem active state */
 	--color-accent: var(--raw-peach-500);
-	--color-accent-soft: var(--raw-peach-soft); /* icon bg, hint surface */
 
 	/* Surfaces — used by Card variants & DashboardLayout */
 	--color-surface-page: var(--raw-cream-500); /* flat page surface */
@@ -160,10 +161,11 @@
 
 	/* ═══════════════ SPACING ═══════════════
 	   Naming axes:
-	     • inset  = padding inside a box
-	     • inline = gap between elements on the same line (icon ↔ label)
-	     • stack  = gap between stacked layout regions
-	     • button = component-specific height/width (Level 3 in @theme)
+	     • inset   = padding inside a box
+	     • inline  = gap between elements on the same line (icon ↔ label)
+	     • gap     = space between sibling elements (CSS gap)
+	     • space   = internal padding of a container (CSS padding)
+	     • button  = component-specific height/width (Level 3 in @theme)
 	*/
 	--spacing-inset-md: var(--raw-space-4); /* 16 — Input/Sidebar/NavItem px */
 	--spacing-inset-lg: var(
@@ -178,13 +180,27 @@
 		--raw-space-3
 	); /* 12 — NavItem icon↔label, Card header gap */
 
-	--spacing-stack-xl: var(
-		--raw-space-10
-	); /* 40 — between DashboardLayout sections */
+	--spacing-gap-section: var(--raw-space-10); /* 40 — between DashboardLayout sections */
+
+	/* gap axis — between sibling elements */
+	--spacing-gap-xxs: var(--raw-space-1);  /*  4px — heading/subtitle gap */
+	--spacing-gap-xs:  var(--raw-space-3);  /* 12px — form item gap */
+	--spacing-gap-sm:  var(--raw-space-4);  /* 16px — icon→heading (wireframe: 14px, ×4) */
+	--spacing-gap-md:  var(--raw-space-5);  /* 20px — form top (wireframe: 22px, ×5) */
+
+	/* space axis — internal padding */
+	--spacing-space-lg: var(--raw-space-7); /* 28px — card px+pb (wireframe: 30px, ×7) */
+	--spacing-space-xl: var(--raw-space-9); /* 36px — inner card pt */
+
+	/* sizing */
+	--spacing-icon-md: var(--raw-space-14); /* 56px — icon container w+h */
 
 	--spacing-button-sm: var(--raw-space-8); /* 32 — h-button-sm + w-button-sm */
 	--spacing-button-md: var(--raw-space-11); /* 44 — h-button-md + w-button-md */
 	--spacing-button-lg: var(--raw-space-13); /* 52 — h-button-lg + w-button-lg */
+
+	/* ═══════════════ WIDTHS ═══════════════ */
+	--width-auth-card: 420px; /* login/auth card max-width */
 
 	/* ═══════════════ TYPOGRAPHY ═══════════════ */
 
@@ -275,22 +291,22 @@ body::before {
 @layer utilities {
 	/* Grain texture overlay for elevated surfaces (cards, sidebar, hero).
 	   Apply to the surface element; add overflow-hidden to clip the grain
-	   at the element's border-radius. */
-	.noise::after {
+	   at the element's border-radius.
+	   isolation: isolate creates a stacking context so ::after at z-index:-1
+	   stays behind children without needing to set z-index on every child. */
+	.grain {
+		position: relative;
+		isolation: isolate;
+	}
+	.grain::after {
 		content: "";
 		position: absolute;
 		inset: 0;
 		pointer-events: none;
-		z-index: 1;
+		z-index: -1;
 		opacity: 0.18;
 		mix-blend-mode: overlay;
 		border-radius: inherit;
 		background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-	}
-
-	/* Direct children need relative + z-index so they render above the grain */
-	.noise > * {
-		position: relative;
-		z-index: 0;
 	}
 }

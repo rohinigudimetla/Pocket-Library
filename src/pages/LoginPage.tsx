@@ -23,15 +23,18 @@ function LoginPage() {
 	return (
 		<div className="min-h-screen flex items-center justify-center p-inset-lg">
 			{/* Outer peach card */}
-			<div className="noise relative w-full max-w-[420px] bg-surface-sunken rounded-surface-lg pt-[30px] px-[30px] pb-[30px] shadow-card overflow-hidden">
-				{/* Blob decoration — loginBg.png provides the organic shapes */}
-				<div className="absolute inset-0 bg-[url(/loginBg.png)] bg-cover bg-center pointer-events-none" />
+			<div className="grain w-full max-w-auth-card bg-surface-sunken rounded-surface-lg p-space-lg shadow-card overflow-hidden">
+				{/* Blob decoration — background image kept in style to satisfy CSP and avoid arbitrary class */}
+				<div
+					className="absolute inset-0 bg-cover bg-center pointer-events-none"
+					style={{ backgroundImage: "url(/loginBg.png)" }}
+				/>
 
 				{/* Inner white card */}
-				<div className="relative bg-surface rounded-surface pt-[36px] px-[28px] pb-[28px] shadow-card-soft flex flex-col">
+				<div className="relative bg-surface rounded-surface pt-space-xl px-space-lg pb-space-lg shadow-card-soft flex flex-col">
 					{/* Icon + heading — centered column */}
-					<div className="flex flex-col items-center gap-[14px]">
-						<div className="w-[56px] h-[56px] rounded-[var(--radius-icon)] bg-accent-soft flex items-center justify-center flex-shrink-0">
+					<div className="flex flex-col items-center gap-gap-sm">
+						<div className="w-icon-md h-icon-md rounded-icon bg-surface-page flex items-center justify-center flex-shrink-0">
 							<svg
 								width="26"
 								height="26"
@@ -47,7 +50,7 @@ function LoginPage() {
 							</svg>
 						</div>
 
-						<div className="flex flex-col items-center gap-[4px]">
+						<div className="flex flex-col items-center gap-gap-xxs">
 							<h1 className="text-heading-h2 text-ink">Welcome back!</h1>
 							<p className="text-button-sm text-ink-muted">
 								Sign in to continue to PocketLibrary
@@ -58,7 +61,7 @@ function LoginPage() {
 					{/* Form */}
 					<form
 						onSubmit={handleSubmit}
-						className="flex flex-col gap-[12px] mt-[22px]"
+						className="flex flex-col gap-gap-xs mt-gap-md"
 					>
 						{/* Email */}
 						<div className="relative">
@@ -113,9 +116,7 @@ function LoginPage() {
 						</div>
 
 						{/* Error message or forgot password link */}
-						<div
-							className={`flex ${error ? "justify-start" : "justify-end"}`}
-						>
+						<div className={`flex ${error ? "justify-start" : "justify-end"}`}>
 							{error ? (
 								<span className="text-button-sm font-semibold text-primary">
 									{error}
@@ -133,12 +134,12 @@ function LoginPage() {
 					</form>
 
 					{/* Footer rows */}
-					<p className="text-center text-button-sm text-ink-muted mt-[14px]">
+					<p className="text-center text-button-sm text-ink-muted mt-gap-sm">
 						Don't have an account?{" "}
 						<span className="text-primary font-semibold">Contact admin.</span>
 					</p>
 
-					<div className="mt-[16px] bg-accent-soft rounded-control px-[14px] py-[10px] text-button-sm text-ink-muted leading-[1.7]">
+					<div className="mt-gap-sm bg-surface-page rounded-control px-[14px] py-[10px] text-button-sm text-ink-muted leading-[1.7]">
 						<strong className="text-ink">Demo credentials</strong>
 						<br />
 						Reader:{" "}
