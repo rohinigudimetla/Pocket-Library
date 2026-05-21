@@ -24,16 +24,10 @@ function LoginPage() {
 		<div className="min-h-screen flex items-center justify-center p-inset-lg">
 			{/* Outer peach card */}
 			<div className="grain w-full max-w-auth-card bg-surface-sunken rounded-surface-lg p-space-lg shadow-card overflow-hidden">
-				{/* Blob decoration — all positioning via inline style; inset-0 class is killed by --spacing:initial */}
+				{/* Blob decoration */}
 				<div
-					style={{
-						position: "absolute",
-						inset: 0,
-						backgroundImage: "url(/loginBg.png)",
-						backgroundSize: "cover",
-						backgroundPosition: "center",
-						pointerEvents: "none",
-					}}
+					className="absolute inset-0 bg-cover bg-center pointer-events-none"
+					style={{ backgroundImage: "url(/loginBg.png)" }}
 				/>
 
 				{/* Inner white card */}

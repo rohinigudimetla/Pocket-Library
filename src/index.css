@@ -289,6 +289,10 @@ body::before {
    ═══════════════════════════════════════════════════════════════════ */
 
 @layer utilities {
+	/* inset-0 is a spacing-scale utility in Tailwind v4 and is silently
+	   dropped by --spacing:initial. Re-declare it explicitly. */
+	.inset-0 { inset: 0; }
+
 	/* Grain texture overlay for elevated surfaces (cards, sidebar, hero).
 	   Apply to the surface element; add overflow-hidden to clip the grain
 	   at the element's border-radius.
