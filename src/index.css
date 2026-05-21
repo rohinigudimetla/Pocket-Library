@@ -244,12 +244,10 @@
    its own bg-surface-page (flat cream). Outside the layout (login,
    404), the gradient shows through unobstructed.
    ═══════════════════════════════════════════════════════════════════ */
-* {
+/* box-sizing only — margin:0 lives in Tailwind's @layer base preflight.
+   An unlayered * { margin:0 } overrides all @layer utilities margin classes. */
+*, *::before, *::after {
 	box-sizing: border-box;
-	margin: 0;
-	/* No universal padding reset — that historically collided with
-	   form-control padding utilities. Tailwind preflight handles the
-	   form-control margin/padding resets we actually need. */
 }
 
 body {
