@@ -22,33 +22,37 @@ function LoginPage() {
 
 	return (
 		<div className="min-h-screen flex items-center justify-center p-inset-lg">
-			{/* Outer peach card — grain texture wraps the white inner card */}
-			<div className="noise relative w-full max-w-[420px] bg-surface-sunken rounded-surface-lg p-[30px] shadow-card overflow-hidden">
-				{/* Inner white card */}
-				<div className="bg-surface rounded-surface p-[36px_28px_28px] shadow-card-soft">
-					{/* Logo icon */}
-					<div className="w-[56px] h-[56px] mx-auto rounded-[var(--radius-icon)] bg-accent-soft flex items-center justify-center">
-						<svg
-							width="26"
-							height="26"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="var(--color-primary)"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-						>
-							<path d="M3 5a2 2 0 0 1 2-2h5v17H5a2 2 0 0 1-2-2V5z" />
-							<path d="M21 5a2 2 0 0 0-2-2h-5v17h5a2 2 0 0 0 2-2V5z" />
-						</svg>
-					</div>
+			{/* Outer peach card */}
+			<div className="noise relative w-full max-w-[420px] bg-surface-sunken rounded-surface-lg pt-[30px] px-[30px] pb-[30px] shadow-card overflow-hidden">
+				{/* Blob decoration — loginBg.png provides the organic shapes */}
+				<div className="absolute inset-0 bg-[url(/loginBg.png)] bg-cover bg-center pointer-events-none" />
 
-					{/* Heading */}
-					<div className="text-center mt-[14px]">
-						<h1 className="text-heading-h2 text-ink">Welcome back!</h1>
-						<p className="text-button-sm text-ink-muted mt-[4px]">
-							Sign in to continue to PocketLibrary
-						</p>
+				{/* Inner white card */}
+				<div className="relative bg-surface rounded-surface pt-[36px] px-[28px] pb-[28px] shadow-card-soft flex flex-col">
+					{/* Icon + heading — centered column */}
+					<div className="flex flex-col items-center gap-[14px]">
+						<div className="w-[56px] h-[56px] rounded-[var(--radius-icon)] bg-accent-soft flex items-center justify-center flex-shrink-0">
+							<svg
+								width="26"
+								height="26"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="var(--color-primary)"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+							>
+								<path d="M3 5a2 2 0 0 1 2-2h5v17H5a2 2 0 0 1-2-2V5z" />
+								<path d="M21 5a2 2 0 0 0-2-2h-5v17h5a2 2 0 0 0 2-2V5z" />
+							</svg>
+						</div>
+
+						<div className="flex flex-col items-center gap-[4px]">
+							<h1 className="text-heading-h2 text-ink">Welcome back!</h1>
+							<p className="text-button-sm text-ink-muted">
+								Sign in to continue to PocketLibrary
+							</p>
+						</div>
 					</div>
 
 					{/* Form */}
@@ -108,11 +112,17 @@ function LoginPage() {
 							/>
 						</div>
 
-						{/* Error / spacer row */}
-						<div className="flex justify-start min-h-[16px]">
-							{error && (
+						{/* Error message or forgot password link */}
+						<div
+							className={`flex ${error ? "justify-start" : "justify-end"}`}
+						>
+							{error ? (
 								<span className="text-button-sm font-semibold text-primary">
 									{error}
+								</span>
+							) : (
+								<span className="text-button-sm font-semibold text-primary cursor-pointer">
+									Forgot password?
 								</span>
 							)}
 						</div>
@@ -122,14 +132,13 @@ function LoginPage() {
 						</Button>
 					</form>
 
-					{/* Footer */}
+					{/* Footer rows */}
 					<p className="text-center text-button-sm text-ink-muted mt-[14px]">
 						Don't have an account?{" "}
 						<span className="text-primary font-semibold">Contact admin.</span>
 					</p>
 
-					{/* Demo credentials hint */}
-					<div className="mt-[16px] bg-accent-soft rounded-control p-[10px_14px] text-button-sm text-ink-muted leading-[1.7]">
+					<div className="mt-[16px] bg-accent-soft rounded-control px-[14px] py-[10px] text-button-sm text-ink-muted leading-[1.7]">
 						<strong className="text-ink">Demo credentials</strong>
 						<br />
 						Reader:{" "}
