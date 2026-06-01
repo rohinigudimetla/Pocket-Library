@@ -1,14 +1,15 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-function Sidebar() {
-	const { currentUser, logout } = useAuth();
+interface SidebarProps {
+	isOpen?: boolean;
+	onClose?: () => void;
+}
 
+function SidebarContent({ onClose }: { onClose?: () => void }) {
+	const { currentUser, logout } = useAuth();
 	return (
-		<aside
-			className="grain w-sidebar-width flex-shrink-0 flex flex-col py-inset-lg px-inset-md overflow-hidden"
-			style={{ background: "linear-gradient(180deg, #7B1835 0%, #641B2E 100%)" }}
-		>
+		<>
 			{/* Background blob */}
 			<img
 				src="/singleBlob.svg"
@@ -44,6 +45,7 @@ function Sidebar() {
 				<NavLink
 					to="/"
 					end
+					onClick={onClose}
 					className={({ isActive }) =>
 						`flex items-center gap-inline-sm px-inset-md py-inset-sm rounded-nav font-medium text-button-md transition-colors ${
 							isActive
@@ -69,6 +71,7 @@ function Sidebar() {
 				</NavLink>
 				<NavLink
 					to="/requests"
+					onClick={onClose}
 					className={({ isActive }) =>
 						`flex items-center gap-inline-sm px-inset-md py-inset-sm rounded-nav font-medium text-button-md transition-colors ${
 							isActive
@@ -131,7 +134,37 @@ function Sidebar() {
 					Logout
 				</button>
 			</div>
-		</aside>
+		</>
+	);
+}
+
+function Sidebar({ isOpen, onClose }: SidebarProps) {
+	return (
+		<>
+			{/* Desktop sidebar — always visible */}
+			<aside
+				className="grain w-sidebar-width flex-shrink-0 hidden md:flex flex-col py-inset-lg px-inset-md overflow-hidden"
+				style={{ background: "linear-gradient(180deg, #7B1835 0%, #641B2E 100%)" }}
+			>
+				<SidebarContent />
+			</aside>
+
+			{/* Mobile drawer + backdrop */}
+			{isOpen && (
+				<>
+					<div
+						className="fixed inset-0 z-40 bg-black/40 md:hidden"
+						onClick={onClose}
+					/>
+					<aside
+						className="grain fixed inset-y-0 left-0 z-50 w-sidebar-width flex flex-col py-inset-lg px-inset-md overflow-hidden md:hidden"
+						style={{ background: "linear-gradient(180deg, #7B1835 0%, #641B2E 100%)" }}
+					>
+						<SidebarContent onClose={onClose} />
+					</aside>
+				</>
+			)}
+		</>
 	);
 }
 

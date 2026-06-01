@@ -60,7 +60,7 @@ function FeaturedBook() {
 
 	return (
 		<div
-			className="grain relative overflow-hidden rounded-surface-lg p-space-lg flex items-center gap-gap-md shadow-hero"
+			className="grain relative overflow-hidden rounded-surface-lg p-space-lg flex flex-col sm:flex-row items-center gap-gap-md shadow-hero"
 			style={{
 				background: "linear-gradient(135deg, #8A2D38 0%, #641B2E 100%)",
 				color: "#fff",
@@ -76,7 +76,7 @@ function FeaturedBook() {
 
 			{/* Book cover */}
 			<div
-				className="relative z-[1] flex-shrink-0 rounded-cover bg-cover-bg shadow-book -rotate-3 flex items-center justify-center"
+				className="relative z-[1] flex-shrink-0 self-center rounded-cover bg-cover-bg shadow-book -rotate-3 flex items-center justify-center"
 				style={{
 					width: "var(--cover-featured-width)",
 					height: "var(--cover-featured-height)",
@@ -98,7 +98,7 @@ function FeaturedBook() {
 			</div>
 
 			{/* Meta */}
-			<div className="flex-1 relative z-[1] min-w-0">
+			<div className="flex-1 relative z-[1] min-w-0 w-full sm:w-auto">
 				<span className="badge-featured mb-gap-sm inline-flex">
 					<svg
 						width="11"
