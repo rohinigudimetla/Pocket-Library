@@ -128,7 +128,12 @@ function LoginPage() {
 							)}
 						</div>
 
-						<Button type="submit" variant="primary" size="md" className="w-full">
+						<Button
+							type="submit"
+							variant="primary"
+							size="md"
+							className="w-full"
+						>
 							Sign In
 						</Button>
 					</form>
