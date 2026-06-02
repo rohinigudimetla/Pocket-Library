@@ -25,6 +25,7 @@ that did not need any of it. That is the point.
 | 04     | React Router  | [module-04-react-router.md](./decisions/module-04-react-router.md)   |
 | 05     | Complex Forms | [module-05-complex-forms.md](./decisions/module-05-complex-forms.md) |
 | 06     | Role Based UI | [module-06-role-based-ui.md](./decisions/module-06-role-based-ui.md) |
+| 07     | Styling       | [module-07-styling.md](./decisions/module-07-styling.md)             |
 
 ---
 
@@ -37,7 +38,7 @@ that did not need any of it. That is the point.
 | 04     | React Router    | ✅ Complete |
 | 05     | Complex Forms   | ✅ Complete |
 | 06     | Role Based UI   | ✅ Complete |
-| 07     | Styling         | ⏳ Pending  |
+| 07     | Styling         | ✅ Complete |
 | 08     | Spring Boot     | ⏳ Pending  |
 | 09     | Spring Security | ⏳ Pending  |
 | 10     | PostgreSQL      | ⏳ Pending  |
