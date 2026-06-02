@@ -4,12 +4,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const schema = z.object({
 	title: z.string().min(3, "Title must be at least 3 characters"),
+	author: z.string().min(1, "Author is required"),
 	pageCount: z.number().positive("Page count must be a positive number"),
 });
 
 type FormData = z.infer<typeof schema>;
 
-function AddBookForm({ onAdd }: { onAdd: (title: string, pageCount: number) => void }) {
+function AddBookForm({
+	onAdd,
+}: {
+	onAdd: (
+		title: string,
+		author: string,
+		pageCount: number,
+		coverId: string | null,
+	) => void;
+}) {
 	const {
 		register,
 		handleSubmit,
@@ -18,7 +28,7 @@ function AddBookForm({ onAdd }: { onAdd: (title: string, pageCount: number) => v
 	} = useForm<FormData>({ resolver: zodResolver(schema) });
 
 	function onSubmit(data: FormData) {
-		onAdd(data.title, data.pageCount);
+		onAdd(data.title, data.author, data.pageCount, null);
 		reset();
 	}
 
@@ -46,7 +56,9 @@ function AddBookForm({ onAdd }: { onAdd: (title: string, pageCount: number) => v
 				</div>
 				<div>
 					<p className="text-button-lg font-bold text-ink">Add New Book</p>
-					<p className="text-caption text-ink-muted">Keep your library growing.</p>
+					<p className="text-caption text-ink-muted">
+						Keep your library growing.
+					</p>
 				</div>
 			</div>
 
@@ -65,6 +77,24 @@ function AddBookForm({ onAdd }: { onAdd: (title: string, pageCount: number) => v
 					{errors.title && (
 						<p className="text-button-sm text-primary font-semibold mt-gap-xxs">
 							{errors.title.message}
+						</p>
+					)}
+				</div>
+
+				{/* Author */}
+				<div>
+					<label className="block text-caption font-semibold text-ink-muted mb-gap-xxs">
+						Author
+					</label>
+					<input
+						type="text"
+						{...register("author")}
+						placeholder="e.g. Frank Herbert"
+						className="w-full text-button-md bg-surface border-[1.5px] border-[#F3D7A2] text-ink placeholder:text-ink-placeholder rounded-control py-[12px] px-[14px] outline-none focus:border-border-strong focus:shadow-input-focus transition-[border-color,box-shadow]"
+					/>
+					{errors.author && (
+						<p className="text-button-sm text-primary font-semibold mt-gap-xxs">
+							{errors.author.message}
 						</p>
 					)}
 				</div>

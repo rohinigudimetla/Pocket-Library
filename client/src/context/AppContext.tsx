@@ -4,7 +4,12 @@ import type { Book, Request } from "../types";
 type AppContextType = {
 	books: Book[];
 	requests: Request[];
-	addBook: (title: string, pageCount: number) => void;
+	addBook: (
+		title: string,
+		author: string,
+		pageCount: number,
+		coverId: string | null,
+	) => void;
 	handleRequest: (title: string, requestedBy: string) => void;
 	handleAccept: (title: string, requestedBy: string) => void;
 	handleDismiss: (title: string, requestedBy: string) => void;
@@ -27,13 +32,42 @@ const AppContext = createContext<AppContextType>({
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
 	const [books, setBooks] = useState<Book[]>([
-		{ title: "The Great Gatsby", totalPages: 180, pagesRead: 0 },
-		{ title: "Dune", totalPages: 412, pagesRead: 0 },
+		{
+			id: 1,
+			title: "The Great Gatsby",
+			author: "F. Scott Fitzgerald",
+			totalPages: 180,
+			pagesRead: 0,
+			coverId: "8739161",
+		},
+		{
+			id: 2,
+			title: "Dune",
+			author: "Frank Herbert",
+			totalPages: 412,
+			pagesRead: 0,
+			coverId: "8765670",
+		},
 	]);
 	const [requests, setRequests] = useState<Request[]>([]);
 
-	function addBook(title: string, pageCount: number) {
-		setBooks((prev) => [...prev, { title, totalPages: pageCount, pagesRead: 0 }]);
+	function addBook(
+		title: string,
+		author: string,
+		pageCount: number,
+		coverId: string | null,
+	) {
+		setBooks((prev) => [
+			...prev,
+			{
+				id: Date.now(),
+				title,
+				author,
+				totalPages: pageCount,
+				pagesRead: 0,
+				coverId,
+			},
+		]);
 	}
 
 	function updateBookProgress(title: string, pagesRead: number) {
@@ -59,7 +93,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	function handleAccept(title: string, requestedBy: string) {
-		setBooks((prev) => [...prev, { title, totalPages: 0, pagesRead: 0 }]);
+		setBooks((prev) => [
+			...prev,
+			{
+				id: Date.now(),
+				title,
+				author: "Unknown",
+				totalPages: 0,
+				pagesRead: 0,
+				coverId: null,
+			},
+		]);
 		setRequests((prev) =>
 			prev.map((r) =>
 				r.title === title && r.requestedBy === requestedBy

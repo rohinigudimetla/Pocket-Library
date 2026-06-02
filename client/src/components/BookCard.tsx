@@ -8,7 +8,14 @@ interface BookCardProps extends Book {
 	id: number;
 }
 
-function BookCard({ title, totalPages, id, pagesRead }: BookCardProps) {
+function BookCard({
+	title,
+	author,
+	totalPages,
+	id,
+	pagesRead,
+	coverId,
+}: BookCardProps) {
 	const { value: isRead, toggle: toggleRead } = useToggle(false);
 	const { currentUser } = useAuth();
 	const { handleDelete, updateBookProgress } = useAppContext();
@@ -30,25 +37,33 @@ function BookCard({ title, totalPages, id, pagesRead }: BookCardProps) {
 			{/* Cover */}
 			<Link to={`/books/${id}`} className="self-center">
 				<div
-					className="rounded-cover bg-cover-bg shadow-book flex items-center justify-center"
+					className="rounded-cover bg-cover-bg shadow-book flex items-center justify-center overflow-hidden"
 					style={{
 						width: "var(--cover-sm-width)",
 						height: "var(--cover-sm-height)",
 					}}
 				>
-					<svg
-						width="28"
-						height="28"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="rgba(255,255,255,.25)"
-						strokeWidth="1.5"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					>
-						<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-						<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-					</svg>
+					{coverId ? (
+						<img
+							src={`https://covers.openlibrary.org/b/id/${coverId}-M.jpg`}
+							alt={title}
+							className="w-full h-full object-cover"
+						/>
+					) : (
+						<svg
+							width="28"
+							height="28"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="rgba(255,255,255,.25)"
+							strokeWidth="1.5"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						>
+							<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+							<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+						</svg>
+					)}
 				</div>
 			</Link>
 

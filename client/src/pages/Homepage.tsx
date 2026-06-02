@@ -84,7 +84,9 @@ function HomePage() {
 				{/* Mobile top header */}
 				<header
 					className="md:hidden flex items-center justify-between px-inset-md py-inset-sm sticky top-0 z-30"
-					style={{ background: "linear-gradient(180deg, #7B1835 0%, #641B2E 100%)" }}
+					style={{
+						background: "linear-gradient(180deg, #7B1835 0%, #641B2E 100%)",
+					}}
 				>
 					<div className="flex items-center gap-inline-sm">
 						<div className="w-[32px] h-[32px] rounded-control bg-primary flex items-center justify-center flex-shrink-0">
@@ -180,7 +182,9 @@ function HomePage() {
 										<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
 									</svg>
 								</div>
-								<p className="text-button-lg font-bold text-ink">No books yet</p>
+								<p className="text-button-lg font-bold text-ink">
+									No books yet
+								</p>
 								<p className="text-caption text-ink-muted">
 									Add your first book to get started.
 								</p>
@@ -192,13 +196,15 @@ function HomePage() {
 									gridTemplateColumns: `repeat(auto-fill, minmax(var(--book-grid-min), 1fr))`,
 								}}
 							>
-								{books.map((book, i) => (
+								{books.map((book) => (
 									<BookCard
-										key={i}
-										id={i}
+										key={book.id}
+										id={book.id}
 										title={book.title}
+										author={book.author}
 										totalPages={book.totalPages}
 										pagesRead={book.pagesRead}
+										coverId={book.coverId}
 									/>
 								))}
 								{isAdmin && <AddNewCard onClick={() => {}} />}

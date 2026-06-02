@@ -103,84 +103,104 @@ function SearchBooks() {
 							{error}
 						</p>
 					)}
-					{data?.docs?.map((book: { title: string; author_name?: string[] }, i: number) => {
-						const title = book.title;
-						const author = book.author_name?.[0] ?? "Unknown author";
-						const status = getRequestStatus(title);
-						return (
-							<div
-								key={i}
-								className="flex items-center gap-gap-sm px-inset-sm py-[10px] rounded-control transition-colors hover:bg-surface-page cursor-pointer"
-							>
-								{/* Mini cover */}
+					{data?.docs?.map(
+						(
+							book: {
+								title: string;
+								author_name?: string[];
+								cover_i?: number;
+								number_of_pages_median?: number;
+							},
+							i: number,
+						) => {
+							const title = book.title;
+							const author = book.author_name?.[0] ?? "Unknown author";
+							const coverId = book.cover_i?.toString() ?? null;
+							const totalPages = book.number_of_pages_median ?? 0;
+							const status = getRequestStatus(title);
+							return (
 								<div
-									className="rounded-cover bg-cover-bg flex-shrink-0 flex items-center justify-center"
-									style={{ width: 36, height: 48 }}
+									key={i}
+									className="flex items-center gap-gap-sm px-inset-sm py-[10px] rounded-control transition-colors hover:bg-surface-page cursor-pointer"
 								>
-									<svg
-										width="14"
-										height="14"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="rgba(255,255,255,.35)"
-										strokeWidth="1.5"
+									{/* Mini cover */}
+									<div
+										className="rounded-cover flex-shrink-0 overflow-hidden"
+										style={{ width: 36, height: 48 }}
 									>
-										<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-										<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-									</svg>
-								</div>
+										{coverId ? (
+											<img
+												src={`https://covers.openlibrary.org/b/id/${coverId}-S.jpg`}
+												alt={title}
+												className="w-full h-full object-cover"
+											/>
+										) : (
+											<div className="w-full h-full bg-cover-bg flex items-center justify-center">
+												<svg
+													width="14"
+													height="14"
+													viewBox="0 0 24 24"
+													fill="none"
+													stroke="rgba(255,255,255,.35)"
+													strokeWidth="1.5"
+												>
+													<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+													<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+												</svg>
+											</div>
+										)}
+									</div>
 
-								<div className="flex-1 min-w-0">
-									<p className="text-button-md font-semibold text-ink truncate">
-										{title}
-									</p>
-									<p className="text-button-sm text-ink-muted">{author}</p>
-								</div>
+									<div className="flex-1 min-w-0">
+										<p className="text-button-md font-semibold text-ink truncate">
+											{title}
+										</p>
+										<p className="text-button-sm text-ink-muted">{author}</p>
+									</div>
 
-								{currentUser?.role === "reader" &&
-									(status === "pending" ? (
+									{currentUser?.role === "reader" &&
+										(status === "pending" ? (
+											<button
+												onClick={() => handleCancelRequest(title)}
+												className="badge-pending flex-shrink-0 cursor-pointer border-none"
+											>
+												Pending
+											</button>
+										) : (
+											<button
+												onClick={() => handleRequest(title, currentUser.name)}
+												className="text-caption font-medium text-primary-strong bg-surface-page border-[1.5px] border-border-warm rounded-pill px-[10px] py-[4px] flex-shrink-0 cursor-pointer hover:bg-surface-warm transition-colors"
+											>
+												Request
+											</button>
+										))}
+
+									{currentUser?.role === "admin" && (
 										<button
-											onClick={() => handleCancelRequest(title)}
-											className="badge-pending flex-shrink-0 cursor-pointer border-none"
+											onClick={() => {
+												addBook(title, author, totalPages, coverId);
+												setIsOpen(false);
+											}}
+											className="w-button-sm h-button-sm rounded-pill border-[1.5px] border-border-warm bg-surface flex items-center justify-center text-primary-strong flex-shrink-0 hover:bg-surface-page transition-colors"
 										>
-											Pending
+											<svg
+												width="14"
+												height="14"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												strokeWidth="2.2"
+												strokeLinecap="round"
+											>
+												<line x1="12" y1="5" x2="12" y2="19" />
+												<line x1="5" y1="12" x2="19" y2="12" />
+											</svg>
 										</button>
-									) : (
-										<button
-											onClick={() =>
-												handleRequest(title, currentUser.name)
-											}
-											className="text-caption font-medium text-primary-strong bg-surface-page border-[1.5px] border-border-warm rounded-pill px-[10px] py-[4px] flex-shrink-0 cursor-pointer hover:bg-surface-warm transition-colors"
-										>
-											Request
-										</button>
-									))}
-
-								{currentUser?.role === "admin" && (
-									<button
-										onClick={() => {
-											addBook(title, 0);
-											setIsOpen(false);
-										}}
-										className="w-button-sm h-button-sm rounded-pill border-[1.5px] border-border-warm bg-surface flex items-center justify-center text-primary-strong flex-shrink-0 hover:bg-surface-page transition-colors"
-									>
-										<svg
-											width="14"
-											height="14"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="2.2"
-											strokeLinecap="round"
-										>
-											<line x1="12" y1="5" x2="12" y2="19" />
-											<line x1="5" y1="12" x2="19" y2="12" />
-										</svg>
-									</button>
-								)}
-							</div>
-						);
-					})}
+									)}
+								</div>
+							);
+						},
+					)}
 					{!isLoading && (data?.docs?.length ?? 0) > 0 && (
 						<p className="text-caption font-semibold text-primary px-inset-sm py-gap-xxs cursor-pointer">
 							View all results →
