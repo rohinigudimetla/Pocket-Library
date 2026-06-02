@@ -1,0 +1,458 @@
+/* src/index.css — PocketLibrary design system */
+
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════════
+   Level 1 — Raw primitives (+ Level 3 :root component tokens)
+   ═══════════════════════════════════════════════════════════════════ */
+:root {
+	/* ───── Color primitives ───── */
+	--raw-peach-500: #fbdb93;
+	--raw-peach-soft: #ffefcb;
+	--raw-peach-a40: rgba(251, 219, 147, 0.4);
+
+	--raw-brick-500: #be5b50;
+	--raw-brick-600: #b14f44;
+	--raw-brick-soft: #d78a7d;
+	--raw-brick-a08: rgba(190, 91, 80, 0.08);
+	--raw-brick-a12: rgba(190, 91, 80, 0.12);
+	--raw-brick-a32: rgba(190, 91, 80, 0.32);
+	--raw-brick-a36: rgba(190, 91, 80, 0.36);
+
+	--raw-rose-500: #8a2d38;
+	--raw-rose-600: #762531;
+	--raw-rose-a32: rgba(138, 45, 56, 0.32);
+	--raw-danger-500: #8a2d38;
+
+	--raw-amaranth-500: #641b2e;
+	--raw-amaranth-600: #7b1835;
+	--raw-amaranth-700: #4a1322;
+	--raw-amaranth-a05: rgba(74, 19, 34, 0.05);
+	--raw-amaranth-a06: rgba(74, 19, 34, 0.06);
+	--raw-amaranth-a08: rgba(74, 19, 34, 0.08);
+	--raw-amaranth-a10: rgba(74, 19, 34, 0.1);
+	--raw-amaranth-a14: rgba(74, 19, 34, 0.14);
+	--raw-amaranth-a18: rgba(74, 19, 34, 0.18);
+	--raw-amaranth-a25: rgba(74, 19, 34, 0.25);
+	--raw-amaranth-a32: rgba(74, 19, 34, 0.32);
+
+	--raw-cream-100: #fff3db;
+	--raw-cream-200: #f6e2c2;
+	--raw-cream-500: #fbf1de;
+	--raw-cream-warm: #f7e7cb;
+
+	--raw-border-warm: #eadbc2;
+	--raw-border-dashed: #d6b59a;
+
+	--raw-onyx-500: #0c120c;
+	--raw-ink-500: #2a1115;
+	--raw-ink-400: #7a5d5f;
+	--raw-ink-300: #a0888a;
+	--raw-ink-200: #b59c8a;
+	--raw-white: #ffffff;
+
+	/* Sidebar / dark-surface text */
+	--raw-parchment-a85: rgba(255, 230, 218, 0.85);
+	--raw-parchment-a75: rgba(255, 230, 218, 0.75);
+	--raw-parchment-a60: rgba(255, 230, 218, 0.6);
+	--raw-white-a06: rgba(255, 255, 255, 0.06);
+	--raw-white-a15: rgba(255, 255, 255, 0.15);
+	--raw-white-a18: rgba(255, 255, 255, 0.18);
+
+	/* Component-specific colors */
+	--raw-toggle-track: #e5d4c0;
+	--raw-progress-light: #f1ddc2;
+	--raw-cover-bg: #2a2a3a;
+	--raw-honey-600: #8c5a1f;
+	--raw-emerald-700: #166534;
+	--raw-emerald-a12: rgba(34, 197, 94, 0.12);
+	--raw-slate-600: #64748b;
+	--raw-slate-a12: rgba(148, 163, 184, 0.12);
+
+	/* ───── Spacing primitives (px) ───── */
+	--raw-space-1: 4px;
+	--raw-space-2: 8px;
+	--raw-space-3: 12px;
+	--raw-space-4: 16px;
+	--raw-space-5: 20px;
+	--raw-space-6: 24px;
+	--raw-space-7: 28px;
+	--raw-space-8: 32px;
+	--raw-space-9: 36px;
+	--raw-space-10: 40px;
+	--raw-space-11: 44px;
+	--raw-space-12: 48px;
+	--raw-space-13: 52px;
+	--raw-space-14: 56px;
+	--raw-space-16: 64px;
+	--raw-space-20: 80px;
+
+	/* ───── Layout primitives ───── */
+	--raw-layout-sidebar: 240px;
+	--raw-layout-content-max: 1200px;
+
+	/* ───── Radius primitives (px) ───── */
+	--raw-radius-1: 8px;
+	--raw-radius-2: 12px;
+	--raw-radius-3: 18px;
+	--raw-radius-4: 24px;
+	--raw-radius-5: 32px;
+	--raw-radius-6: 40px;
+	--raw-radius-full: 9999px;
+	--raw-radius-icon: 16px;
+	--raw-radius-nav: 14px;
+	--raw-radius-cover: 4px;
+
+	/* ───── Type primitives ───── */
+	--raw-text-13: 13px;
+	--raw-text-14: 14px;
+	--raw-text-16: 16px;
+	--raw-text-22: 22px;
+	--raw-text-30: 30px;
+	--raw-leading-110: 1.1;
+	--raw-leading-120: 1.2;
+	--raw-tracking-tight: -0.02em;
+	--raw-font-weight-bold: 700;
+
+	/* ═══════════════════════════════════════════════════════════════
+	   Level 3 — Component tokens (CSS var only, no Tailwind utility)
+	   ═══════════════════════════════════════════════════════════════ */
+	--sidebar-width: var(--raw-layout-sidebar);
+	--layout-content-max: var(--raw-layout-content-max);
+
+	/* Book cover dimensions (rounded to 4px grid) */
+	--cover-sm-width: 148px;
+	--cover-sm-height: 208px;
+	--cover-featured-width: 128px;
+	--cover-featured-height: 196px;
+	--cover-request-width: 44px;
+	--cover-request-height: 64px;
+
+	/* Book grid min column width */
+	--book-grid-min: 184px;
+
+	/* Toggle dimensions */
+	--toggle-width: 44px;
+	--toggle-height: 24px;
+	--toggle-sm-width: 36px;
+	--toggle-sm-height: 20px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Level 2 — Semantic tokens + Level 3 tokens exposed as utilities
+   ═══════════════════════════════════════════════════════════════════ */
+@theme {
+	--spacing: initial;
+
+	/* ───── Font family ───── */
+	--font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+
+	/* ═══════════════ COLORS ═══════════════ */
+
+	/* Brand & action */
+	--color-primary: var(--raw-brick-500);
+	--color-primary-hover: var(--raw-brick-600);
+	--color-primary-strong: var(--raw-rose-500);
+	--color-danger: var(--raw-danger-500);
+	--color-danger-hover: var(--raw-rose-600);
+	--color-danger-strong: var(--raw-amaranth-500);
+
+	/* Accent */
+	--color-accent: var(--raw-peach-500);
+	--color-accent-soft: var(--raw-peach-soft);
+
+	/* Surfaces */
+	--color-surface-page: var(--raw-cream-500);
+	--color-surface: var(--raw-white);
+	--color-surface-sunken: var(--raw-peach-500);
+	--color-surface-warm: var(--raw-cream-warm);
+	--color-surface-inverse: var(--raw-amaranth-500);
+	--color-surface-inverse-deep: var(--raw-amaranth-700);
+	--color-surface-hover: var(--raw-brick-a08);
+	--color-surface-avatar: var(--raw-white-a15);
+	--color-surface-inverse-hover: var(--raw-white-a06);
+
+	/* Text */
+	--color-ink: var(--raw-ink-500);
+	--color-ink-muted: var(--raw-ink-400);
+	--color-ink-soft: var(--raw-ink-300);
+	--color-ink-placeholder: var(--raw-ink-200);
+	--color-on-inverse: var(--raw-white);
+	--color-on-accent: var(--raw-amaranth-500);
+	--color-on-inverse-muted: var(--raw-parchment-a85);
+	--color-on-inverse-soft: var(--raw-parchment-a75);
+	--color-on-inverse-faint: var(--raw-parchment-a60);
+
+	/* Borders */
+	--color-border: var(--raw-peach-a40);
+	--color-border-warm: var(--raw-border-warm);
+	--color-border-strong: var(--raw-brick-500);
+	--color-border-dashed: var(--raw-border-dashed);
+
+	/* Progress / cover */
+	--color-progress-track: var(--raw-white-a18);
+	--color-progress-light: var(--raw-progress-light);
+	--color-cover-bg: var(--raw-cover-bg);
+
+	/* Badge status */
+	--color-badge-pending-text: var(--raw-honey-600);
+	--color-badge-fulfilled-bg: var(--raw-emerald-a12);
+	--color-badge-fulfilled-text: var(--raw-emerald-700);
+	--color-badge-cancelled-bg: var(--raw-slate-a12);
+	--color-badge-cancelled-text: var(--raw-slate-600);
+
+	/* ═══════════════ SPACING ═══════════════ */
+	--spacing-inset-sm: var(--raw-space-3);   /* 12px */
+	--spacing-inset-md: var(--raw-space-4);   /* 16px */
+	--spacing-inset-lg: var(--raw-space-6);   /* 24px */
+	--spacing-inset-xl: var(--raw-space-10);  /* 40px */
+
+	--spacing-inline-xs: var(--raw-space-2);  /* 8px */
+	--spacing-inline-sm: var(--raw-space-3);  /* 12px */
+
+	--spacing-gap-section: var(--raw-space-10); /* 40px */
+	--spacing-gap-xxs: var(--raw-space-1);  /* 4px */
+	--spacing-gap-xs: var(--raw-space-3);   /* 12px */
+	--spacing-gap-sm: var(--raw-space-4);   /* 16px */
+	--spacing-gap-md: var(--raw-space-5);   /* 20px */
+
+	--spacing-space-sm: var(--raw-space-2);  /* 8px */
+	--spacing-space-lg: var(--raw-space-7);  /* 28px */
+	--spacing-space-xl: var(--raw-space-9);  /* 36px */
+
+	--spacing-icon-md: var(--raw-space-14);  /* 56px */
+	--spacing-nav-icon: var(--raw-space-10); /* 40px */
+	--spacing-sidebar-width: var(--raw-layout-sidebar); /* 240px */
+
+	--spacing-button-sm: var(--raw-space-8);   /* 32px */
+	--spacing-button-md: var(--raw-space-11);  /* 44px */
+	--spacing-button-lg: var(--raw-space-13);  /* 52px */
+	--spacing-action-col: var(--raw-space-20); /* 80px — fixed request action column */
+
+	/* ═══════════════ WIDTHS ═══════════════ */
+	--max-width-auth-card: 420px;
+
+	/* ═══════════════ TYPOGRAPHY ═══════════════ */
+	--text-button-sm: var(--raw-text-13);
+	--text-button-md: var(--raw-text-14);
+	--text-button-lg: var(--raw-text-16);
+	--text-caption: var(--raw-text-13);
+
+	--text-heading-h1: var(--raw-text-30);
+	--text-heading-h1--line-height: var(--raw-leading-110);
+	--text-heading-h1--letter-spacing: var(--raw-tracking-tight);
+	--text-heading-h1--font-weight: var(--raw-font-weight-bold);
+
+	--text-heading-h2: var(--raw-text-22);
+	--text-heading-h2--line-height: var(--raw-leading-120);
+	--text-heading-h2--letter-spacing: var(--raw-tracking-tight);
+	--text-heading-h2--font-weight: var(--raw-font-weight-bold);
+
+	/* ═══════════════ RADII ═══════════════ */
+	--radius-control: var(--raw-radius-2);    /* 12px */
+	--radius-surface: var(--raw-radius-4);    /* 24px */
+	--radius-surface-lg: var(--raw-radius-5); /* 32px */
+	--radius-pill: var(--raw-radius-full);
+	--radius-icon: var(--raw-radius-icon);    /* 16px */
+	--radius-nav: var(--raw-radius-nav);      /* 14px */
+	--radius-cover: var(--raw-radius-cover);  /* 4px */
+
+	/* ═══════════════ SHADOWS ═══════════════ */
+	--shadow-card: 0 8px 24px var(--raw-amaranth-a10), 0 2px 6px var(--raw-amaranth-a05);
+	--shadow-card-soft: 0 4px 16px var(--raw-amaranth-a06);
+	--shadow-sm: 0 1px 2px var(--raw-amaranth-a06), 0 1px 3px var(--raw-amaranth-a05);
+	--shadow-md: 0 4px 12px var(--raw-amaranth-a08), 0 2px 4px var(--raw-amaranth-a05);
+	--shadow-lg: 0 12px 32px var(--raw-amaranth-a14), 0 4px 12px var(--raw-amaranth-a06);
+	--shadow-hero: 0 18px 40px var(--raw-amaranth-a25);
+	--shadow-book: 0 14px 30px var(--raw-amaranth-a32), 0 6px 12px var(--raw-amaranth-a18);
+	--shadow-cta: 0 6px 14px var(--raw-brick-a32);
+	--shadow-cta-side: 0 4px 12px var(--raw-brick-a36);
+	--shadow-danger: 0 6px 14px var(--raw-rose-a32);
+	--shadow-input-focus: 0 0 0 3px var(--raw-brick-a12);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Global page styles
+   ═══════════════════════════════════════════════════════════════════ */
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: var(--font-sans);
+	color: var(--color-ink);
+	background: linear-gradient(
+		180deg,
+		var(--raw-cream-100) 0%,
+		var(--raw-cream-200) 100%
+	);
+	min-height: 100vh;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+body::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 0;
+	opacity: 0.1;
+	mix-blend-mode: overlay;
+	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+#root {
+	width: 100%;
+	min-height: 100vh;
+	position: relative;
+	z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Utilities
+   ═══════════════════════════════════════════════════════════════════ */
+@layer utilities {
+	/* 0-value utilities broken by --spacing:initial — re-declare explicitly */
+	.inset-0 { inset: 0; }
+	.top-0 { top: 0; }
+	.right-0 { right: 0; }
+	.bottom-0 { bottom: 0; }
+	.left-0 { left: 0; }
+	.min-w-0 { min-width: 0; }
+
+	/* Grain texture overlay */
+	.grain {
+		position: relative;
+		isolation: isolate;
+	}
+	.grain::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		z-index: -1;
+		opacity: 0.18;
+		mix-blend-mode: overlay;
+		border-radius: inherit;
+		background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+	}
+
+	/* Toggle component */
+	.toggle {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		cursor: pointer;
+		user-select: none;
+		flex-shrink: 0;
+		width: var(--toggle-width);
+		height: var(--toggle-height);
+	}
+	.toggle--sm {
+		width: var(--toggle-sm-width);
+		height: var(--toggle-sm-height);
+	}
+	.toggle-track {
+		position: absolute;
+		inset: 0;
+		background: var(--raw-toggle-track);
+		border-radius: var(--radius-pill);
+		transition: background 0.18s;
+	}
+	.toggle input:checked ~ .toggle-track {
+		background: var(--color-primary);
+	}
+	.toggle-thumb {
+		position: absolute;
+		top: 3px;
+		left: 3px;
+		width: 18px;
+		height: 18px;
+		background: var(--color-surface);
+		border-radius: var(--radius-pill);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+		transition: transform 0.18s;
+	}
+	.toggle input:checked ~ .toggle-thumb {
+		transform: translateX(20px);
+	}
+	.toggle--sm .toggle-thumb {
+		width: 14px;
+		height: 14px;
+	}
+	.toggle--sm input:checked ~ .toggle-thumb {
+		transform: translateX(16px);
+	}
+
+	/* Progress bar component */
+	.progress {
+		height: 6px;
+		background: var(--color-progress-track);
+		border-radius: var(--radius-pill);
+		overflow: hidden;
+	}
+	.progress--light {
+		background: var(--color-progress-light);
+	}
+	.progress > span {
+		display: block;
+		height: 100%;
+		background: var(--color-primary);
+		border-radius: var(--radius-pill);
+		transition: width 0.4s ease;
+	}
+
+	/* Badge variants */
+	.badge-count {
+		background: var(--color-primary);
+		color: var(--color-on-inverse);
+		min-width: var(--raw-space-6);
+		height: var(--raw-space-6);
+		border-radius: var(--radius-pill);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 12px;
+		font-weight: 700;
+		padding: 0 var(--raw-space-2);
+	}
+	.badge-featured {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--raw-space-1);
+		color: var(--raw-peach-500);
+		background: rgba(255, 239, 203, 0.12);
+		border: 1px solid var(--raw-peach-a40);
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		padding: 5px 10px;
+		border-radius: var(--radius-pill);
+		text-transform: uppercase;
+	}
+	.badge-pending {
+		background: var(--raw-peach-a40);
+		color: var(--color-badge-pending-text);
+		font-size: var(--raw-text-13);
+		font-weight: 500;
+		padding: var(--raw-space-1) var(--raw-space-3);
+		border-radius: var(--radius-pill);
+	}
+	.badge-fulfilled {
+		background: var(--color-badge-fulfilled-bg);
+		color: var(--color-badge-fulfilled-text);
+		font-size: var(--raw-text-13);
+		font-weight: 500;
+		padding: var(--raw-space-1) var(--raw-space-3);
+		border-radius: var(--radius-pill);
+	}
+	.badge-cancelled {
+		background: var(--color-badge-cancelled-bg);
+		color: var(--color-badge-cancelled-text);
+		font-size: var(--raw-text-13);
+		font-weight: 500;
+		padding: var(--raw-space-1) var(--raw-space-3);
+		border-radius: var(--radius-pill);
+	}
+}
