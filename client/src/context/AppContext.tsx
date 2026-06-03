@@ -16,6 +16,7 @@ type AppContextType = {
 	handleCancelRequest: (title: string) => void;
 	handleDelete: (title: string) => void;
 	updateBookProgress: (title: string, pagesRead: number) => void;
+	updateTotalPages: (title: string, totalPages: number) => void;
 };
 
 const AppContext = createContext<AppContextType>({
@@ -28,6 +29,7 @@ const AppContext = createContext<AppContextType>({
 	handleCancelRequest: () => {},
 	handleDelete: () => {},
 	updateBookProgress: () => {},
+	updateTotalPages: () => {},
 });
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
@@ -73,6 +75,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 	function updateBookProgress(title: string, pagesRead: number) {
 		setBooks((prev) =>
 			prev.map((b) => (b.title === title ? { ...b, pagesRead } : b)),
+		);
+	}
+
+	function updateTotalPages(title: string, totalPages: number) {
+		setBooks((prev) =>
+			prev.map((b) => (b.title === title ? { ...b, totalPages } : b)),
 		);
 	}
 
@@ -147,6 +155,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 				handleCancelRequest,
 				handleDelete,
 				updateBookProgress,
+				updateTotalPages,
 			}}
 		>
 			{children}

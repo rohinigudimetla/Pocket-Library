@@ -18,7 +18,8 @@ function BookCard({
 }: BookCardProps) {
 	const { value: isRead, toggle: toggleRead } = useToggle(false);
 	const { currentUser } = useAuth();
-	const { handleDelete, updateBookProgress } = useAppContext();
+	const { handleDelete, updateBookProgress, updateTotalPages } =
+		useAppContext();
 
 	const pct = totalPages > 0 ? Math.round((pagesRead / totalPages) * 100) : 0;
 
@@ -91,9 +92,32 @@ function BookCard({
 
 			{/* Progress */}
 			<div className="flex justify-between items-center text-caption text-ink-muted">
-				<span>
-					{pagesRead} / {totalPages}
-				</span>
+				<div className="flex items-center gap-gap-xxs">
+					<input
+						type="number"
+						min={0}
+						max={totalPages || undefined}
+						value={pagesRead}
+						onChange={(e) =>
+							updateBookProgress(
+								title,
+								Math.max(0, Math.min(totalPages, Number(e.target.value))),
+							)
+						}
+						className="w-[48px] text-caption text-ink bg-surface-page border-[1.5px] border-border-warm rounded-control px-[6px] py-[2px] outline-none focus:border-border-strong text-center"
+					/>
+					<span>/</span>
+					<input
+						type="number"
+						min={1}
+						value={totalPages || ""}
+						placeholder="?"
+						onChange={(e) =>
+							updateTotalPages(title, Math.max(1, Number(e.target.value)))
+						}
+						className="w-[48px] text-caption text-ink bg-surface-page border-[1.5px] border-border-warm rounded-control px-[6px] py-[2px] outline-none focus:border-border-strong text-center"
+					/>
+				</div>
 				<span className="font-bold text-primary">{pct}%</span>
 			</div>
 			<div className="progress progress--light">
