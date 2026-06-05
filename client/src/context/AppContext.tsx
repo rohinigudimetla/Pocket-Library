@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import type { Book, Request } from "../types";
 
 type AppContextType = {
@@ -33,25 +33,15 @@ const AppContext = createContext<AppContextType>({
 });
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-	const [books, setBooks] = useState<Book[]>([
-		{
-			id: 1,
-			title: "The Great Gatsby",
-			author: "F. Scott Fitzgerald",
-			totalPages: 180,
-			pagesRead: 0,
-			coverId: "8739161",
-		},
-		{
-			id: 2,
-			title: "Dune",
-			author: "Frank Herbert",
-			totalPages: 412,
-			pagesRead: 0,
-			coverId: "8765670",
-		},
-	]);
+	const [books, setBooks] = useState<Book[]>([]);
 	const [requests, setRequests] = useState<Request[]>([]);
+
+	useEffect(() => {
+		fetch("http://localhost:8080/api/books")
+			.then((res) => res.json())
+			.then((data) => setBooks(data))
+			.catch((err) => console.error("Failed to fetch books:", err));
+	}, []);
 
 	function addBook(
 		title: string,
