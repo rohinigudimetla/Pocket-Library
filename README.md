@@ -26,7 +26,7 @@ that did not need any of it. That is the point.
 | 05     | Complex Forms | [module-05-complex-forms.md](./decisions/module-05-complex-forms.md) |
 | 06     | Role Based UI | [module-06-role-based-ui.md](./decisions/module-06-role-based-ui.md) |
 | 07     | Styling       | [module-07-styling.md](./decisions/module-07-styling.md)             |
-| 08     | Spring Boot   | [module-08-spring-boot.md](./decisions/module-07-styling.md)         |
+| 08     | Spring Boot   | [module-08-spring-boot.md](./decisions/module-08-spring-boot.md)     |
 
 ---
 
