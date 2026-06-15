@@ -1,6 +1,7 @@
 package com.pocketlibrary.server.repository;
 
 import com.pocketlibrary.server.model.Book;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
