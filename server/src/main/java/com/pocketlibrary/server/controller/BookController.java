@@ -4,6 +4,7 @@ import com.pocketlibrary.server.model.Book;
 import com.pocketlibrary.server.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,10 +18,9 @@ import java.util.List;
 // Every endpoint here will start with /api/books.
 @RequestMapping("/api/books")
 
-// @CrossOrigin allows the frontend (running on port 5173) to call
-// this backend (running on port 8080). Without this, the browser
-// blocks the request for security reasons. This is called CORS.
-@CrossOrigin(origins = "http://localhost:5173")
+// @CrossOrigin removed. That rule now lives once, globally, in
+// SecurityConfig's corsConfigurationSource(), instead of being repeated
+// on every controller.
 public class BookController {
 
     private final BookService bookService;
@@ -35,6 +35,8 @@ public class BookController {
     // Returns all books as a JSON array.
     // ResponseEntity wraps the response so we can control the HTTP status code.
     // HttpStatus.OK = 200
+    // No role check needed — SecurityConfig only requires that someone
+    // is logged in at all (.anyRequest().authenticated()) for this endpoint.
     @GetMapping
     public ResponseEntity<List<Book>> getAllBooks() {
         return ResponseEntity.ok(bookService.getAllBooks());
@@ -51,6 +53,15 @@ public class BookController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // @PreAuthorize checks the role right here, at the method itself,
+    // before the method body ever runs. This is a second, explicit check
+    // in addition to the rule already enforced in SecurityConfig at the
+    // URL level — this one makes the rule visible right where the action
+    // happens, instead of only in a separate config file.
+    // "hasRole('ADMIN')" checks for an authority named "ROLE_ADMIN" —
+    // this lines up with JwtFilter, which sets authorities as
+    // "ROLE_" + role.
+    @PreAuthorize("hasRole('ADMIN')")
     // POST /api/books
     // @RequestBody tells Spring to read the JSON from the request body
     // and convert it into a Book object automatically.
@@ -61,6 +72,8 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
+    // Same reasoning as addBook() above — only an ADMIN can delete.
+    @PreAuthorize("hasRole('ADMIN')")
     // DELETE /api/books/{id}
     // If the book was found and deleted, returns 204 (No Content).
     // If the book was not found, returns 404.

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { Book, Request } from "../types";
+import { useAuth } from "./AuthContext";
 
 type AppContextType = {
 	books: Book[];
@@ -35,13 +36,20 @@ const AppContext = createContext<AppContextType>({
 export function AppProvider({ children }: { children: React.ReactNode }) {
 	const [books, setBooks] = useState<Book[]>([]);
 	const [requests, setRequests] = useState<Request[]>([]);
+	const { token } = useAuth();
 
 	useEffect(() => {
-		fetch("http://localhost:8080/api/books")
+		if (!token) return;
+
+		fetch("http://localhost:8080/api/books", {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
 			.then((res) => res.json())
 			.then((data) => setBooks(data))
 			.catch((err) => console.error("Failed to fetch books:", err));
-	}, []);
+	}, [token]);
 
 	function addBook(
 		title: string,
