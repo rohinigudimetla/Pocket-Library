@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-seed-users
+      author: rohini
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: r@p
+              - column:
+                  name: password
+                  value: $2b$10$o3lCsSqjutj8KsfvdYz.ZO.gO.J0t8ZcTIIc2xIuur7SkML69pSli
+              - column:
+                  name: role
+                  value: READER
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: a@p
+              - column:
+                  name: password
+                  value: $2b$10$qSHvMbHGyJ7OqTxV2Xfn4ODDv7uI4em4AVm8t9zMktp8.Wqs5vyru
+              - column:
+                  name: role
+                  value: ADMIN

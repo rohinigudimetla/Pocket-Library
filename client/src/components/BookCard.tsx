@@ -180,7 +180,7 @@ function BookCard({
 				</button>
 				{currentUser?.role === "admin" && (
 					<button
-						onClick={() => handleDelete(title)}
+						onClick={() => handleDelete(id)}
 						className="w-button-sm h-button-sm rounded-pill border-[1.5px] border-[rgba(138,45,56,.25)] bg-surface flex items-center justify-center text-danger hover:bg-[rgba(138,45,56,.08)] transition-colors ml-auto"
 					>
 						<svg

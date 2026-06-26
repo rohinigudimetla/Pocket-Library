@@ -13,7 +13,7 @@ function SearchBooks() {
 	const debouncedQuery = useDebounce(query, 500);
 	const searchUrl =
 		debouncedQuery.length >= 3
-			? `https://openlibrary.org/search.json?q=${debouncedQuery}&limit=6`
+			? `https://openlibrary.org/search.json?q=${debouncedQuery}&limit=6&fields=key,title,author_name,cover_i,number_of_pages_median`
 			: "";
 	const { data, isLoading, error } = useFetch(searchUrl);
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -168,7 +168,15 @@ function SearchBooks() {
 											</button>
 										) : (
 											<button
-												onClick={() => handleRequest(title, currentUser.name)}
+												onClick={() =>
+													handleRequest(
+														title,
+														author,
+														coverId,
+														totalPages,
+														currentUser.name,
+													)
+												}
 												className="text-caption font-medium text-primary-strong bg-surface-page border-[1.5px] border-border-warm rounded-pill px-[10px] py-[4px] flex-shrink-0 cursor-pointer hover:bg-surface-warm transition-colors"
 											>
 												Request

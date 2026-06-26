@@ -3,6 +3,7 @@ package com.pocketlibrary.server.service;
 import com.pocketlibrary.server.model.User;
 import com.pocketlibrary.server.repository.UserRepository;
 import com.pocketlibrary.server.security.JwtService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,10 +13,12 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public AuthService(UserRepository userRepository, JwtService jwtService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     public Optional<String> login(String username, String password) {
@@ -27,7 +30,7 @@ public class AuthService {
 
         User user = userOptional.get();
 
-        if (!user.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             return Optional.empty();
         }
 

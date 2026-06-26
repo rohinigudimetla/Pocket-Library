@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-align-schema-with-app
+      author: rohini
+      changes:
+        - renameColumn:
+            tableName: users
+            oldColumnName: email
+            newColumnName: username
+
+        - dropColumn:
+            tableName: books
+            columnName: current_page
+        - dropColumn:
+            tableName: books
+            columnName: is_read
+        - dropColumn:
+            tableName: books
+            columnName: created_at
+
+        - addColumn:
+            tableName: books
+            columns:
+              - column:
+                  name: total_pages
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: pages_read
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cover_id
+                  type: VARCHAR(255)

@@ -3,8 +3,13 @@ import { useAppContext } from "../context/AppContext";
 
 function RequestList() {
 	const { currentUser } = useAuth();
-	const { requests, handleAccept, handleDismiss, handleCancelRequest, handleRequest } =
-		useAppContext();
+	const {
+		requests,
+		handleAccept,
+		handleDismiss,
+		handleCancelRequest,
+		handleRequest,
+	} = useAppContext();
 
 	if (!currentUser) return null;
 
@@ -54,23 +59,31 @@ function RequestList() {
 						>
 							{/* Mini cover */}
 							<div
-								className="rounded-cover bg-cover-bg flex-shrink-0 flex items-center justify-center"
+								className="rounded-cover bg-cover-bg flex-shrink-0 flex items-center justify-center overflow-hidden"
 								style={{
 									width: "var(--cover-request-width)",
 									height: "var(--cover-request-height)",
 								}}
 							>
-								<svg
-									width="16"
-									height="16"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="rgba(255,255,255,.35)"
-									strokeWidth="1.5"
-								>
-									<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-									<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-								</svg>
+								{r.coverId ? (
+									<img
+										src={`https://covers.openlibrary.org/b/id/${r.coverId}-S.jpg`}
+										alt={r.title}
+										className="w-full h-full object-cover"
+									/>
+								) : (
+									<svg
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="rgba(255,255,255,.35)"
+										strokeWidth="1.5"
+									>
+										<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+										<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+									</svg>
+								)}
 							</div>
 
 							{/* Text */}
@@ -133,7 +146,15 @@ function RequestList() {
 								)}
 								{!isAdmin && r.status === "cancelled" && (
 									<button
-										onClick={() => handleRequest(r.title, currentUser.name)}
+										onClick={() =>
+											handleRequest(
+												r.title,
+												r.author,
+												r.coverId,
+												r.totalPages,
+												currentUser.name,
+											)
+										}
 										className="text-caption font-medium text-primary-strong bg-surface-page border-[1.5px] border-border-warm rounded-pill px-[10px] py-[4px] cursor-pointer hover:bg-surface-warm transition-colors whitespace-nowrap"
 									>
 										Request

@@ -11,11 +11,17 @@ type AppContextType = {
 		pageCount: number,
 		coverId: string | null,
 	) => void;
-	handleRequest: (title: string, requestedBy: string) => void;
+	handleRequest: (
+		title: string,
+		author: string,
+		coverId: string | null,
+		totalPages: number,
+		requestedBy: string,
+	) => void;
 	handleAccept: (title: string, requestedBy: string) => void;
 	handleDismiss: (title: string, requestedBy: string) => void;
 	handleCancelRequest: (title: string) => void;
-	handleDelete: (title: string) => void;
+	handleDelete: (id: number) => void;
 	updateBookProgress: (title: string, pagesRead: number) => void;
 	updateTotalPages: (title: string, totalPages: number) => void;
 };
@@ -51,23 +57,34 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 			.catch((err) => console.error("Failed to fetch books:", err));
 	}, [token]);
 
-	function addBook(
+	async function addBook(
 		title: string,
 		author: string,
 		pageCount: number,
 		coverId: string | null,
 	) {
-		setBooks((prev) => [
-			...prev,
-			{
-				id: Date.now(),
+		const response = await fetch("http://localhost:8080/api/books", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify({
 				title,
 				author,
 				totalPages: pageCount,
 				pagesRead: 0,
 				coverId,
-			},
-		]);
+			}),
+		});
+
+		if (!response.ok) {
+			console.error("Failed to add book");
+			return;
+		}
+
+		const savedBook = await response.json();
+		setBooks((prev) => [...prev, savedBook]);
 	}
 
 	function updateBookProgress(title: string, pagesRead: number) {
@@ -82,7 +99,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 		);
 	}
 
-	function handleRequest(title: string, requestedBy: string) {
+	function handleRequest(
+		title: string,
+		author: string,
+		coverId: string | null,
+		totalPages: number,
+		requestedBy: string,
+	) {
 		setRequests((prev) => {
 			const existing = prev.find(
 				(r) => r.title === title && r.requestedBy === requestedBy,
@@ -94,22 +117,42 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 						: r,
 				);
 			}
-			return [...prev, { title, status: "pending", requestedBy }];
+			return [
+				...prev,
+				{ title, author, coverId, totalPages, status: "pending", requestedBy },
+			];
 		});
 	}
 
-	function handleAccept(title: string, requestedBy: string) {
-		setBooks((prev) => [
-			...prev,
-			{
-				id: Date.now(),
-				title,
-				author: "Unknown",
-				totalPages: 0,
-				pagesRead: 0,
-				coverId: null,
+	async function handleAccept(title: string, requestedBy: string) {
+		const request = requests.find(
+			(r) => r.title === title && r.requestedBy === requestedBy,
+		);
+		if (!request) return;
+
+		const response = await fetch("http://localhost:8080/api/books", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
 			},
-		]);
+			body: JSON.stringify({
+				title: request.title,
+				author: request.author,
+				totalPages: request.totalPages,
+				pagesRead: 0,
+				coverId: request.coverId,
+			}),
+		});
+
+		if (!response.ok) {
+			console.error("Failed to accept request");
+			return;
+		}
+
+		const savedBook = await response.json();
+		setBooks((prev) => [...prev, savedBook]);
+
 		setRequests((prev) =>
 			prev.map((r) =>
 				r.title === title && r.requestedBy === requestedBy
@@ -137,8 +180,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 		);
 	}
 
-	function handleDelete(title: string) {
-		setBooks((prev) => prev.filter((b) => b.title !== title));
+	async function handleDelete(id: number) {
+		const response = await fetch(`http://localhost:8080/api/books/${id}`, {
+			method: "DELETE",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+
+		if (!response.ok) {
+			console.error("Failed to delete book");
+			return;
+		}
+
+		setBooks((prev) => prev.filter((b) => b.id !== id));
 	}
 
 	return (

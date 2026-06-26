@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/001-create-users.yaml
+  - include:
+      file: db/changelog/002-create-books.yaml
+  - include:
+      file: db/changelog/003-align-schema-with-app.yaml
+  - include:
+      file: db/changelog/004-seed-users.yaml

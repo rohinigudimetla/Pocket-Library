@@ -1,5 +1,8 @@
 export type Request = {
 	title: string;
+	author: string;
+	coverId: string | null;
+	totalPages: number;
 	status: "pending" | "cancelled" | "fulfilled" | "dismissed";
 	requestedBy: string;
 };

@@ -1,10 +1,13 @@
 package com.pocketlibrary.server.controller;
 
 import com.pocketlibrary.server.model.Book;
+import com.pocketlibrary.server.model.User;
+import com.pocketlibrary.server.repository.UserRepository;
 import com.pocketlibrary.server.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,11 +27,15 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+    // Needed to look up the real User row for whoever is currently
+    // logged in, so a newly added book can be attached to them.
+    private final UserRepository userRepository;
 
     // Constructor injection — same pattern as BookService.
-    // Spring finds the BookService bean and passes it in here.
-    public BookController(BookService bookService) {
+    // Spring finds both beans and passes them in here.
+    public BookController(BookService bookService, UserRepository userRepository) {
         this.bookService = bookService;
+        this.userRepository = userRepository;
     }
 
     // GET /api/books
@@ -68,6 +75,22 @@ public class BookController {
     // Returns the saved book with status 201 (Created).
     @PostMapping
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
+        // SecurityContextHolder holds the identity JwtFilter wrote in
+        // when this request's token was validated. getName() returns
+        // the username, the same value passed into generateToken()
+        // back in JwtService.
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // Look up the real User row matching that username, so the
+        // book can be attached to an actual database row, not just a
+        // string. orElseThrow is used here because reaching this line
+        // with no matching user would mean a valid token exists for a
+        // user that no longer exists in the database, a genuine
+        // inconsistency worth failing loudly on rather than silently.
+        User currentUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+
+        book.setUser(currentUser);
         Book saved = bookService.addBook(book);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }

@@ -50,6 +50,10 @@ public class BookService {
 
     // Deletes a book by ID. Returns true if deleted, false if not found.
     public boolean deleteBook(Long id) {
-        return bookRepository.deleteById(id);
+        if (!bookRepository.existsById(id)) {
+            return false;
+        }
+        bookRepository.deleteById(id);
+        return true;
     }
 }
