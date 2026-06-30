@@ -2,6 +2,10 @@ import { createContext, useContext, useState, useEffect } from "react";
 import type { Book, Request } from "../types";
 import { useAuth } from "./AuthContext";
 
+type PageResponse<T> = {
+	content: T[];
+};
+
 type AppContextType = {
 	books: Book[];
 	requests: Request[];
@@ -16,11 +20,9 @@ type AppContextType = {
 		author: string,
 		coverId: string | null,
 		totalPages: number,
-		requestedBy: string,
 	) => void;
-	handleAccept: (title: string, requestedBy: string) => void;
-	handleDismiss: (title: string, requestedBy: string) => void;
-	handleCancelRequest: (title: string) => void;
+	handleAccept: (id: number) => void;
+	handleDismiss: (id: number) => void;
 	handleDelete: (id: number) => void;
 	updateBookProgress: (title: string, pagesRead: number) => void;
 	updateTotalPages: (title: string, totalPages: number) => void;
@@ -33,7 +35,6 @@ const AppContext = createContext<AppContextType>({
 	handleRequest: () => {},
 	handleAccept: () => {},
 	handleDismiss: () => {},
-	handleCancelRequest: () => {},
 	handleDelete: () => {},
 	updateBookProgress: () => {},
 	updateTotalPages: () => {},
@@ -42,7 +43,7 @@ const AppContext = createContext<AppContextType>({
 export function AppProvider({ children }: { children: React.ReactNode }) {
 	const [books, setBooks] = useState<Book[]>([]);
 	const [requests, setRequests] = useState<Request[]>([]);
-	const { token } = useAuth();
+	const { token, currentUser } = useAuth();
 
 	useEffect(() => {
 		if (!token) return;
@@ -53,9 +54,27 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 			},
 		})
 			.then((res) => res.json())
-			.then((data) => setBooks(data))
+			.then((data: PageResponse<Book>) => setBooks(data.content))
 			.catch((err) => console.error("Failed to fetch books:", err));
 	}, [token]);
+
+	useEffect(() => {
+		if (!token || !currentUser) return;
+
+		const endpoint =
+			currentUser.role === "admin"
+				? "http://localhost:8080/api/requests/pending"
+				: "http://localhost:8080/api/requests/mine";
+
+		fetch(endpoint, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+			.then((res) => res.json())
+			.then((data: PageResponse<Request>) => setRequests(data.content))
+			.catch((err) => console.error("Failed to fetch requests:", err));
+	}, [token, currentUser]);
 
 	async function addBook(
 		title: string,
@@ -99,85 +118,75 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 		);
 	}
 
-	function handleRequest(
+	async function handleRequest(
 		title: string,
 		author: string,
 		coverId: string | null,
 		totalPages: number,
-		requestedBy: string,
 	) {
-		setRequests((prev) => {
-			const existing = prev.find(
-				(r) => r.title === title && r.requestedBy === requestedBy,
-			);
-			if (existing) {
-				return prev.map((r) =>
-					r.title === title && r.requestedBy === requestedBy
-						? { ...r, status: "pending" as const }
-						: r,
-				);
-			}
-			return [
-				...prev,
-				{ title, author, coverId, totalPages, status: "pending", requestedBy },
-			];
-		});
-	}
-
-	async function handleAccept(title: string, requestedBy: string) {
-		const request = requests.find(
-			(r) => r.title === title && r.requestedBy === requestedBy,
-		);
-		if (!request) return;
-
-		const response = await fetch("http://localhost:8080/api/books", {
+		const response = await fetch("http://localhost:8080/api/requests", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: `Bearer ${token}`,
 			},
-			body: JSON.stringify({
-				title: request.title,
-				author: request.author,
-				totalPages: request.totalPages,
-				pagesRead: 0,
-				coverId: request.coverId,
-			}),
+			body: JSON.stringify({ title, author, coverId, totalPages }),
 		});
+
+		if (!response.ok) {
+			console.error("Failed to create request");
+			return;
+		}
+
+		const savedRequest = await response.json();
+		setRequests((prev) => [...prev, savedRequest]);
+	}
+
+	async function handleAccept(id: number) {
+		const response = await fetch(
+			`http://localhost:8080/api/requests/${id}/accept`,
+			{
+				method: "PATCH",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			},
+		);
 
 		if (!response.ok) {
 			console.error("Failed to accept request");
 			return;
 		}
 
-		const savedBook = await response.json();
-		setBooks((prev) => [...prev, savedBook]);
+		setRequests((prev) => prev.filter((r) => r.id !== id));
 
-		setRequests((prev) =>
-			prev.map((r) =>
-				r.title === title && r.requestedBy === requestedBy
-					? { ...r, status: "fulfilled" as const }
-					: r,
-			),
-		);
+		fetch("http://localhost:8080/api/books", {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+			.then((res) => res.json())
+			.then((data: PageResponse<Book>) => setBooks(data.content))
+			.catch((err) => console.error("Failed to refresh books:", err));
 	}
 
-	function handleDismiss(title: string, requestedBy: string) {
-		setRequests((prev) =>
-			prev.map((r) =>
-				r.title === title && r.requestedBy === requestedBy
-					? { ...r, status: "dismissed" as const }
-					: r,
-			),
+	async function handleDismiss(id: number) {
+		const response = await fetch(
+			`http://localhost:8080/api/requests/${id}/dismiss`,
+			{
+				method: "PATCH",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			},
 		);
-	}
 
-	function handleCancelRequest(title: string) {
-		setRequests((prev) =>
-			prev.map((r) =>
-				r.title === title ? { ...r, status: "cancelled" as const } : r,
-			),
-		);
+		if (!response.ok) {
+			console.error("Failed to dismiss request");
+			return;
+		}
+
+		setRequests((prev) => prev.filter((r) => r.id !== id));
 	}
 
 	async function handleDelete(id: number) {
@@ -205,7 +214,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 				handleRequest,
 				handleAccept,
 				handleDismiss,
-				handleCancelRequest,
 				handleDelete,
 				updateBookProgress,
 				updateTotalPages,

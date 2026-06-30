@@ -7,3 +7,9 @@ databaseChangeLog:
       file: db/changelog/003-align-schema-with-app.yaml
   - include:
       file: db/changelog/004-seed-users.yaml
+  - include:
+      file: db/changelog/005-add-created-at-to-books.yaml
+  - include:
+      file: db/changelog/006-create-requests-table.yaml
+  - include:
+      file: db/changelog/007-seed-second-reader.yaml

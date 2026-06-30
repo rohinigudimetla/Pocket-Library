@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-requests-table
+      author: rohini
+      changes:
+        - createTable:
+            tableName: requests
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cover_id
+                  type: VARCHAR(255)
+              - column:
+                  name: total_pages
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: requested_by
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: requests
+            baseColumnNames: requested_by
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_requests_user

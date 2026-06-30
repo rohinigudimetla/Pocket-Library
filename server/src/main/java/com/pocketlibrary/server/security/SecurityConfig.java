@@ -87,7 +87,7 @@ public class SecurityConfig {
         // Only allow requests coming from the frontend's address.
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         // Allow these specific HTTP methods to be used from that origin.
-        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "PATCH"));
         // Allow any request header, including the Authorization header
         // that carries the token.
         configuration.setAllowedHeaders(List.of("*"));

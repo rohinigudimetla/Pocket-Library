@@ -2,6 +2,8 @@ package com.pocketlibrary.server.service;
 
 import com.pocketlibrary.server.model.Book;
 import com.pocketlibrary.server.repository.BookRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,11 +31,14 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    // Returns all books by asking the Repository for them.
-    // The Service does not know or care how the Repository stores them.
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public Page<Book> getAllBooks(Pageable pageable) {
+        return bookRepository.findAll(pageable);
     }
+
+    public Page<Book> getBooksInProgress(Pageable pageable) {
+        return bookRepository.findBooksInProgress(pageable);
+    }
+
 
     // Returns one book by ID wrapped in Optional.
     // If the book does not exist, Optional will be empty.

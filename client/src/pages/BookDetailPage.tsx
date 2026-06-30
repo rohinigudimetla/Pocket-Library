@@ -8,7 +8,7 @@ function BookDetailPage() {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { books } = useAppContext();
-	const book = books[Number(id)];
+	const book = books.find((b) => b.id === Number(id));
 	const [mobileOpen, setMobileOpen] = useState(false);
 
 	const pct =
@@ -24,7 +24,9 @@ function BookDetailPage() {
 				{/* Mobile top header */}
 				<header
 					className="md:hidden flex items-center justify-between px-inset-md py-inset-sm sticky top-0 z-30"
-					style={{ background: "linear-gradient(180deg, #7B1835 0%, #641B2E 100%)" }}
+					style={{
+						background: "linear-gradient(180deg, #7B1835 0%, #641B2E 100%)",
+					}}
 				>
 					<div className="flex items-center gap-inline-sm">
 						<div className="w-[32px] h-[32px] rounded-control bg-primary flex items-center justify-center flex-shrink-0">
@@ -90,7 +92,9 @@ function BookDetailPage() {
 
 						{!book ? (
 							<div className="bg-surface rounded-surface shadow-card p-inset-xl flex flex-col items-center gap-gap-sm text-center">
-								<p className="text-button-lg font-bold text-ink">Book not found</p>
+								<p className="text-button-lg font-bold text-ink">
+									Book not found
+								</p>
 								<p className="text-caption text-ink-muted">
 									This book doesn't exist in your library.
 								</p>
@@ -99,31 +103,42 @@ function BookDetailPage() {
 							<div className="bg-surface rounded-surface shadow-card p-inset-lg flex flex-col sm:flex-row gap-gap-md">
 								{/* Book cover */}
 								<div
-									className="flex-shrink-0 self-center sm:self-start rounded-cover bg-cover-bg shadow-book flex items-center justify-center"
+									className="flex-shrink-0 self-center sm:self-start rounded-cover bg-cover-bg shadow-book flex items-center justify-center overflow-hidden"
 									style={{
 										width: "var(--cover-sm-width)",
 										height: "var(--cover-sm-height)",
 									}}
 								>
-									<svg
-										width="32"
-										height="32"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="rgba(255,255,255,.3)"
-										strokeWidth="1.5"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									>
-										<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-										<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-									</svg>
+									{book.coverId ? (
+										<img
+											src={`https://covers.openlibrary.org/b/id/${book.coverId}-M.jpg`}
+											alt={book.title}
+											className="w-full h-full object-cover"
+										/>
+									) : (
+										<svg
+											width="32"
+											height="32"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="rgba(255,255,255,.3)"
+											strokeWidth="1.5"
+											strokeLinecap="round"
+											strokeLinejoin="round"
+										>
+											<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+											<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+										</svg>
+									)}
 								</div>
 
 								{/* Book meta */}
 								<div className="flex flex-col gap-gap-sm flex-1 min-w-0">
 									<div>
 										<h2 className="text-heading-h2 text-ink">{book.title}</h2>
+										<p className="text-caption text-ink-muted mt-gap-xxs">
+											{book.author}
+										</p>
 										<p className="text-caption text-ink-muted mt-gap-xxs">
 											Total pages: {book.totalPages}
 										</p>
@@ -132,7 +147,9 @@ function BookDetailPage() {
 									{/* Progress */}
 									<div>
 										<div className="flex justify-between items-center text-caption text-ink-muted mb-gap-xxs">
-											<span>{book.pagesRead} / {book.totalPages} pages read</span>
+											<span>
+												{book.pagesRead} / {book.totalPages} pages read
+											</span>
 											<span className="font-bold text-primary">{pct}%</span>
 										</div>
 										<div className="progress progress--light">

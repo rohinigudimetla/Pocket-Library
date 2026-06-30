@@ -1,6 +1,5 @@
 package com.pocketlibrary.server.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,13 +8,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "books")
+@Table(name = "requests")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Book {
+public class Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,15 +23,15 @@ public class Book {
 
     private String title;
     private String author;
-    private int totalPages;
-    private int pagesRead;
     private String coverId;
+    private int totalPages;
+    private String status;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "requested_by")
+    private User requestedBy;
 
     @CreatedDate
     private LocalDateTime createdAt;
+
 }

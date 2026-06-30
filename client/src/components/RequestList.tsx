@@ -3,32 +3,23 @@ import { useAppContext } from "../context/AppContext";
 
 function RequestList() {
 	const { currentUser } = useAuth();
-	const {
-		requests,
-		handleAccept,
-		handleDismiss,
-		handleCancelRequest,
-		handleRequest,
-	} = useAppContext();
+	const { requests, handleAccept, handleDismiss } = useAppContext();
 
 	if (!currentUser) return null;
 
 	const isAdmin = currentUser.role === "admin";
-	const visible = isAdmin
-		? requests.filter((r) => r.status === "pending")
-		: requests.filter((r) => r.requestedBy === currentUser.name);
 
 	return (
 		<div className="bg-surface rounded-surface shadow-card p-inset-md flex flex-col">
 			{/* Header */}
 			<div className="flex items-center gap-gap-xs mb-gap-sm">
 				<span className="text-heading-h2 text-ink">Requests</span>
-				{visible.length > 0 && (
-					<span className="badge-count">{visible.length}</span>
+				{requests.length > 0 && (
+					<span className="badge-count">{requests.length}</span>
 				)}
 			</div>
 
-			{visible.length === 0 ? (
+			{requests.length === 0 ? (
 				<div className="flex-1 flex flex-col items-center justify-center text-center gap-gap-xs py-inset-lg">
 					<div className="w-button-md h-button-md rounded-control bg-surface-page flex items-center justify-center">
 						{/* Inbox icon */}
@@ -52,9 +43,9 @@ function RequestList() {
 				</div>
 			) : (
 				<div className="flex flex-col gap-gap-xs">
-					{visible.slice(0, 4).map((r, i) => (
+					{requests.slice(0, 4).map((r) => (
 						<div
-							key={i}
+							key={r.id}
 							className="bg-surface rounded-control shadow-sm p-inset-sm flex items-center gap-gap-sm"
 						>
 							{/* Mini cover */}
@@ -92,16 +83,18 @@ function RequestList() {
 									{r.title}
 								</p>
 								<p className="text-button-sm text-ink-muted mt-[2px]">
-									{isAdmin ? `by ${r.requestedBy}` : `Status: ${r.status}`}
+									{isAdmin
+										? `by ${r.requestedByUsername}`
+										: `Status: ${r.status}`}
 								</p>
 							</div>
 
 							{/* Action — fixed width to prevent layout shift */}
 							<div className="flex-shrink-0 flex justify-end items-center min-w-action-col">
-								{isAdmin && r.status === "pending" && (
+								{isAdmin && r.status === "PENDING" && (
 									<div className="flex gap-gap-xxs">
 										<button
-											onClick={() => handleAccept(r.title, r.requestedBy)}
+											onClick={() => handleAccept(r.id)}
 											className="w-button-sm h-button-sm rounded-pill bg-primary-strong border-[1.5px] border-primary-strong text-on-inverse flex items-center justify-center hover:bg-danger transition-colors"
 										>
 											<svg
@@ -118,7 +111,7 @@ function RequestList() {
 											</svg>
 										</button>
 										<button
-											onClick={() => handleDismiss(r.title, r.requestedBy)}
+											onClick={() => handleDismiss(r.id)}
 											className="w-button-sm h-button-sm rounded-pill border-[1.5px] border-[rgba(138,45,56,.25)] bg-surface text-danger flex items-center justify-center hover:bg-[rgba(138,45,56,.08)] transition-colors"
 										>
 											<svg
@@ -136,34 +129,13 @@ function RequestList() {
 									</div>
 								)}
 
-								{!isAdmin && r.status === "pending" && (
-									<button
-										onClick={() => handleCancelRequest(r.title)}
-										className="badge-pending border-none cursor-pointer"
-									>
-										Pending
-									</button>
+								{!isAdmin && r.status === "PENDING" && (
+									<span className="badge-pending">Pending</span>
 								)}
-								{!isAdmin && r.status === "cancelled" && (
-									<button
-										onClick={() =>
-											handleRequest(
-												r.title,
-												r.author,
-												r.coverId,
-												r.totalPages,
-												currentUser.name,
-											)
-										}
-										className="text-caption font-medium text-primary-strong bg-surface-page border-[1.5px] border-border-warm rounded-pill px-[10px] py-[4px] cursor-pointer hover:bg-surface-warm transition-colors whitespace-nowrap"
-									>
-										Request
-									</button>
+								{!isAdmin && r.status === "ACCEPTED" && (
+									<span className="badge-fulfilled">Accepted</span>
 								)}
-								{!isAdmin && r.status === "fulfilled" && (
-									<span className="badge-fulfilled">Fulfilled</span>
-								)}
-								{!isAdmin && r.status === "dismissed" && (
+								{!isAdmin && r.status === "DISMISSED" && (
 									<span className="badge-cancelled">Dismissed</span>
 								)}
 							</div>
@@ -172,9 +144,9 @@ function RequestList() {
 				</div>
 			)}
 
-			{visible.length > 4 && (
+			{requests.length > 4 && (
 				<p className="text-caption font-semibold text-primary mt-gap-sm cursor-pointer">
-					View all ({visible.length}) →
+					View all ({requests.length}) →
 				</p>
 			)}
 		</div>

@@ -4,6 +4,9 @@ import com.pocketlibrary.server.model.Book;
 import com.pocketlibrary.server.model.User;
 import com.pocketlibrary.server.repository.UserRepository;
 import com.pocketlibrary.server.service.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,8 +48,16 @@ public class BookController {
     // No role check needed — SecurityConfig only requires that someone
     // is logged in at all (.anyRequest().authenticated()) for this endpoint.
     @GetMapping
-    public ResponseEntity<List<Book>> getAllBooks() {
-        return ResponseEntity.ok(bookService.getAllBooks());
+    public ResponseEntity<Page<Book>> getAllBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "false") boolean inProgress
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Book> books = inProgress
+                ? bookService.getBooksInProgress(pageable)
+                : bookService.getAllBooks(pageable);
+        return ResponseEntity.ok(books);
     }
 
     // GET /api/books/{id}
