@@ -202,32 +202,34 @@
 	--color-badge-cancelled-text: var(--raw-slate-600);
 
 	/* ═══════════════ SPACING ═══════════════ */
-	--spacing-inset-sm: var(--raw-space-3);   /* 12px */
-	--spacing-inset-md: var(--raw-space-4);   /* 16px */
-	--spacing-inset-lg: var(--raw-space-6);   /* 24px */
-	--spacing-inset-xl: var(--raw-space-10);  /* 40px */
+	--spacing-inset-sm: var(--raw-space-3); /* 12px */
+	--spacing-inset-md: var(--raw-space-4); /* 16px */
+	--spacing-inset-lg: var(--raw-space-6); /* 24px */
+	--spacing-inset-xl: var(--raw-space-10); /* 40px */
 
-	--spacing-inline-xs: var(--raw-space-2);  /* 8px */
-	--spacing-inline-sm: var(--raw-space-3);  /* 12px */
+	--spacing-inline-xs: var(--raw-space-2); /* 8px */
+	--spacing-inline-sm: var(--raw-space-3); /* 12px */
 
 	--spacing-gap-section: var(--raw-space-10); /* 40px */
-	--spacing-gap-xxs: var(--raw-space-1);  /* 4px */
-	--spacing-gap-xs: var(--raw-space-3);   /* 12px */
-	--spacing-gap-sm: var(--raw-space-4);   /* 16px */
-	--spacing-gap-md: var(--raw-space-5);   /* 20px */
+	--spacing-gap-xxs: var(--raw-space-1); /* 4px */
+	--spacing-gap-xs: var(--raw-space-3); /* 12px */
+	--spacing-gap-sm: var(--raw-space-4); /* 16px */
+	--spacing-gap-md: var(--raw-space-5); /* 20px */
 
-	--spacing-space-sm: var(--raw-space-2);  /* 8px */
-	--spacing-space-lg: var(--raw-space-7);  /* 28px */
-	--spacing-space-xl: var(--raw-space-9);  /* 36px */
+	--spacing-space-sm: var(--raw-space-2); /* 8px */
+	--spacing-space-lg: var(--raw-space-7); /* 28px */
+	--spacing-space-xl: var(--raw-space-9); /* 36px */
 
-	--spacing-icon-md: var(--raw-space-14);  /* 56px */
+	--spacing-icon-md: var(--raw-space-14); /* 56px */
 	--spacing-nav-icon: var(--raw-space-10); /* 40px */
 	--spacing-sidebar-width: var(--raw-layout-sidebar); /* 240px */
 
-	--spacing-button-sm: var(--raw-space-8);   /* 32px */
-	--spacing-button-md: var(--raw-space-11);  /* 44px */
-	--spacing-button-lg: var(--raw-space-13);  /* 52px */
-	--spacing-action-col: var(--raw-space-20); /* 80px — fixed request action column */
+	--spacing-button-sm: var(--raw-space-8); /* 32px */
+	--spacing-button-md: var(--raw-space-11); /* 44px */
+	--spacing-button-lg: var(--raw-space-13); /* 52px */
+	--spacing-action-col: var(
+		--raw-space-20
+	); /* 80px — fixed request action column */
 
 	/* ═══════════════ WIDTHS ═══════════════ */
 	--max-width-auth-card: 420px;
@@ -249,22 +251,27 @@
 	--text-heading-h2--font-weight: var(--raw-font-weight-bold);
 
 	/* ═══════════════ RADII ═══════════════ */
-	--radius-control: var(--raw-radius-2);    /* 12px */
-	--radius-surface: var(--raw-radius-4);    /* 24px */
+	--radius-control: var(--raw-radius-2); /* 12px */
+	--radius-surface: var(--raw-radius-4); /* 24px */
 	--radius-surface-lg: var(--raw-radius-5); /* 32px */
 	--radius-pill: var(--raw-radius-full);
-	--radius-icon: var(--raw-radius-icon);    /* 16px */
-	--radius-nav: var(--raw-radius-nav);      /* 14px */
-	--radius-cover: var(--raw-radius-cover);  /* 4px */
+	--radius-icon: var(--raw-radius-icon); /* 16px */
+	--radius-nav: var(--raw-radius-nav); /* 14px */
+	--radius-cover: var(--raw-radius-cover); /* 4px */
 
 	/* ═══════════════ SHADOWS ═══════════════ */
-	--shadow-card: 0 8px 24px var(--raw-amaranth-a10), 0 2px 6px var(--raw-amaranth-a05);
+	--shadow-card:
+		0 8px 24px var(--raw-amaranth-a10), 0 2px 6px var(--raw-amaranth-a05);
 	--shadow-card-soft: 0 4px 16px var(--raw-amaranth-a06);
-	--shadow-sm: 0 1px 2px var(--raw-amaranth-a06), 0 1px 3px var(--raw-amaranth-a05);
-	--shadow-md: 0 4px 12px var(--raw-amaranth-a08), 0 2px 4px var(--raw-amaranth-a05);
-	--shadow-lg: 0 12px 32px var(--raw-amaranth-a14), 0 4px 12px var(--raw-amaranth-a06);
+	--shadow-sm:
+		0 1px 2px var(--raw-amaranth-a06), 0 1px 3px var(--raw-amaranth-a05);
+	--shadow-md:
+		0 4px 12px var(--raw-amaranth-a08), 0 2px 4px var(--raw-amaranth-a05);
+	--shadow-lg:
+		0 12px 32px var(--raw-amaranth-a14), 0 4px 12px var(--raw-amaranth-a06);
 	--shadow-hero: 0 18px 40px var(--raw-amaranth-a25);
-	--shadow-book: 0 14px 30px var(--raw-amaranth-a32), 0 6px 12px var(--raw-amaranth-a18);
+	--shadow-book:
+		0 14px 30px var(--raw-amaranth-a32), 0 6px 12px var(--raw-amaranth-a18);
 	--shadow-cta: 0 6px 14px var(--raw-brick-a32);
 	--shadow-cta-side: 0 4px 12px var(--raw-brick-a36);
 	--shadow-danger: 0 6px 14px var(--raw-rose-a32);
@@ -274,7 +281,9 @@
 /* ═══════════════════════════════════════════════════════════════════
    Global page styles
    ═══════════════════════════════════════════════════════════════════ */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
 	box-sizing: border-box;
 }
 
@@ -314,12 +323,24 @@ body::before {
    ═══════════════════════════════════════════════════════════════════ */
 @layer utilities {
 	/* 0-value utilities broken by --spacing:initial — re-declare explicitly */
-	.inset-0 { inset: 0; }
-	.top-0 { top: 0; }
-	.right-0 { right: 0; }
-	.bottom-0 { bottom: 0; }
-	.left-0 { left: 0; }
-	.min-w-0 { min-width: 0; }
+	.inset-0 {
+		inset: 0;
+	}
+	.top-0 {
+		top: 0;
+	}
+	.right-0 {
+		right: 0;
+	}
+	.bottom-0 {
+		bottom: 0;
+	}
+	.left-0 {
+		left: 0;
+	}
+	.min-w-0 {
+		min-width: 0;
+	}
 
 	/* Grain texture overlay */
 	.grain {
@@ -454,5 +475,13 @@ body::before {
 		font-weight: 500;
 		padding: var(--raw-space-1) var(--raw-space-3);
 		border-radius: var(--radius-pill);
+	}
+
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;
+	}
+	.scrollbar-hide {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
 	}
 }

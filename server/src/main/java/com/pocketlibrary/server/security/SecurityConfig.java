@@ -59,6 +59,7 @@ public class SecurityConfig {
                         // This has to be open, because you need a token from here
                         // before you can prove who you are anywhere else.
                         .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/requests/notifications/stream").permitAll()
 
                         // Only someone with the ADMIN role can add or delete books.
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/books").hasRole("ADMIN")

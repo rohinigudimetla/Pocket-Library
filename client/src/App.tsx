@@ -4,29 +4,33 @@ import BookDetailPage from "./pages/BookDetailPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
+import NotificationToast from "./components/NotificationToast";
 
 function App() {
 	return (
-		<Routes>
-			<Route path="/login" element={<LoginPage />} />
-			<Route
-				path="/"
-				element={
-					<ProtectedRoute>
-						<HomePage />
-					</ProtectedRoute>
-				}
-			/>
-			<Route
-				path="/books/:id"
-				element={
-					<ProtectedRoute>
-						<BookDetailPage />
-					</ProtectedRoute>
-				}
-			/>
-			<Route path="*" element={<NotFoundPage />} />
-		</Routes>
+		<>
+			<NotificationToast />
+			<Routes>
+				<Route path="/login" element={<LoginPage />} />
+				<Route
+					path="/"
+					element={
+						<ProtectedRoute>
+							<HomePage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/books/:id"
+					element={
+						<ProtectedRoute>
+							<BookDetailPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route path="*" element={<NotFoundPage />} />
+			</Routes>
+		</>
 	);
 }
 export default App;

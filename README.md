@@ -30,7 +30,7 @@ that did not need any of it. That is the point.
 | 09     | Spring Security | [module-09-spring-security.md](./decisions/module-09-spring-security.md)     | ✅ Complete |
 | 10     | PostgreSQL      | [module-10-postgresql.md](./decisions/module-10-postgresql.md)               | ✅ Complete |
 | 11     | JPA & Hibernate | [module-11-jpa-and-hibernate.md](./decisions/module-11-jpa-and-hibernate.md) | ✅ Complete |
-| 12     | Redis           |                                                                              | ⏳ Pending  |
+| 12     | Redis           | [module-12-redis.md](./decisions/module-12-redis.md)                         | ✅ Complete |
 | 13     | AWS             |                                                                              | ⏳ Pending  |
 | 14     | CI/CD           |                                                                              | ⏳ Pending  |
 | 15     | Testing         |                                                                              | ⏳ Pending  |

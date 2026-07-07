@@ -7,6 +7,7 @@ import com.pocketlibrary.server.model.User;
 import com.pocketlibrary.server.repository.RequestRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,10 +15,12 @@ public class RequestService {
 
     private final RequestRepository requestRepository;
     private final BookService bookService;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public RequestService(RequestRepository requestRepository, BookService bookService) {
+    public RequestService(RequestRepository requestRepository, BookService bookService, RedisTemplate<String, String> redisTemplate) {
         this.requestRepository = requestRepository;
         this.bookService = bookService;
+        this.redisTemplate = redisTemplate;
     }
 
     public Request createRequest(Request request) {
@@ -49,6 +52,8 @@ public class RequestService {
 
                     request.setStatus("ACCEPTED");
                     requestRepository.save(request);
+                    String message = request.getRequestedBy().getUsername() + ":" + request.getTitle();
+                    redisTemplate.convertAndSend("requests:accepted", message);
                     return true;
                 })
                 .orElse(false);

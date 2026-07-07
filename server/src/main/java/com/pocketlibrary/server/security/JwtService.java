@@ -2,15 +2,36 @@ package com.pocketlibrary.server.security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @Service
 public class JwtService {
-    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final RedisTemplate<String, String> redisTemplate;
+    private Key secretKey;
     private final long EXPIRY_MS = 1000 * 60 * 60 * 10;
+
+    public JwtService(RedisTemplate<String, String> redisTemplate){
+        this.redisTemplate = redisTemplate;
+        this.secretKey = loadOrGenerateKey();
+    }
+
+    private Key loadOrGenerateKey(){
+
+        String stored = redisTemplate.opsForValue().get("jwt:signing-key");
+        if (stored != null){
+            byte[] keyBytes = Base64.getDecoder().decode(stored);
+            return Keys.hmacShaKeyFor(keyBytes);
+        }
+        Key newKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        String encoded = Base64.getEncoder().encodeToString(newKey.getEncoded());
+        redisTemplate.opsForValue().set("jwt:signing-key", encoded);
+        return newKey;
+    }
 
     public String generateToken(String username, String role) {
         return Jwts.builder()
@@ -50,6 +71,16 @@ public class JwtService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public long getRemainingExpiry(String token) {
+        Date expiration = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+        return (expiration.getTime() - System.currentTimeMillis()) / 1000;
     }
 
 

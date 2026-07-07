@@ -4,6 +4,8 @@ import com.pocketlibrary.server.dto.RequestSummary;
 import com.pocketlibrary.server.model.Request;
 import com.pocketlibrary.server.model.User;
 import com.pocketlibrary.server.repository.UserRepository;
+import com.pocketlibrary.server.security.JwtService;
+import com.pocketlibrary.server.service.NotificationService;
 import com.pocketlibrary.server.service.RequestService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,16 +15,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequestMapping("/api/requests")
 public class RequestController {
     private final RequestService requestService;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
+    private final JwtService jwtService;
 
-    public RequestController(RequestService requestService, UserRepository userRepository) {
+    public RequestController(RequestService requestService, UserRepository userRepository, NotificationService notificationService, JwtService jwtService) {
         this.requestService = requestService;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping
@@ -75,5 +82,11 @@ public class RequestController {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+    }
+
+    @GetMapping("/notifications/stream")
+    public SseEmitter streamNotifications(@RequestParam String token) {
+        String username = jwtService.extractUsername(token);
+        return notificationService.register(username);
     }
 }

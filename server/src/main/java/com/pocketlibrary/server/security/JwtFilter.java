@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,9 +31,12 @@ public class JwtFilter extends OncePerRequestFilter {
     // This constructor runs once when Spring creates this class.
     // Spring sees this class needs a JwtService and a UserRepository,
     // finds the ones it already created, and hands them in here automatically.
-    public JwtFilter(JwtService jwtService, UserRepository userRepository) {
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public JwtFilter(JwtService jwtService, UserRepository userRepository, RedisTemplate<String, String> redisTemplate) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
+        this.redisTemplate = redisTemplate;
     }
 
     // This method is required by the parent class. Every single request
@@ -66,8 +70,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // Ask the toolbox: is this token still good? Not expired, not
         // tampered with, properly signed. This returns true or false only.
-        if (jwtService.isTokenValid(token)) {
-
+        if (jwtService.isTokenValid(token)) {Boolean isBlacklisted = redisTemplate.opsForSet().isMember("jwt:blacklist", token);
+            if (jwtService.isTokenValid(token) && !Boolean.TRUE.equals(isBlacklisted)) {
             // Pull the username out of the token's contents.
             String username = jwtService.extractUsername(token);
             // Pull the role (READER or ADMIN) out of the token's contents.
@@ -94,4 +98,4 @@ public class JwtFilter extends OncePerRequestFilter {
         // request itself — it only ever identifies who is making it.
         filterChain.doFilter(request, response);
     }
-}
+}}

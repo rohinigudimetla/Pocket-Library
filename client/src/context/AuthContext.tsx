@@ -24,12 +24,12 @@ const AuthContext = createContext<{
 	currentUser: User | null;
 	token: string | null;
 	login: (email: string, password: string) => Promise<boolean>;
-	logout: () => void;
+	logout: () => Promise<void>;
 }>({
 	currentUser: null,
 	token: null,
 	login: async () => false,
-	logout: () => {},
+	logout: async () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -67,7 +67,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		return true;
 	}
 
-	function logout() {
+	async function logout() {
+		if (token) {
+			await fetch("http://localhost:8080/api/auth/logout", {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+		}
 		setCurrentUser(null);
 		setToken(null);
 	}

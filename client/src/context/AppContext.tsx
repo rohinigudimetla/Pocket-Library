@@ -9,6 +9,7 @@ type PageResponse<T> = {
 type AppContextType = {
 	books: Book[];
 	requests: Request[];
+	notification: string | null;
 	addBook: (
 		title: string,
 		author: string,
@@ -31,6 +32,7 @@ type AppContextType = {
 const AppContext = createContext<AppContextType>({
 	books: [],
 	requests: [],
+	notification: null,
 	addBook: () => {},
 	handleRequest: () => {},
 	handleAccept: () => {},
@@ -43,6 +45,7 @@ const AppContext = createContext<AppContextType>({
 export function AppProvider({ children }: { children: React.ReactNode }) {
 	const [books, setBooks] = useState<Book[]>([]);
 	const [requests, setRequests] = useState<Request[]>([]);
+	const [notification, setNotification] = useState<string | null>(null);
 	const { token, currentUser } = useAuth();
 
 	useEffect(() => {
@@ -74,6 +77,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 			.then((res) => res.json())
 			.then((data: PageResponse<Request>) => setRequests(data.content))
 			.catch((err) => console.error("Failed to fetch requests:", err));
+	}, [token, currentUser]);
+
+	useEffect(() => {
+		if (!token || !currentUser) return;
+		const eventSource = new EventSource(
+			`http://localhost:8080/api/requests/notifications/stream?token=${token}`,
+		);
+		eventSource.onmessage = (event) => {
+			setNotification(event.data);
+			setTimeout(() => setNotification(null), 4000);
+		};
+		return () => {
+			eventSource.close();
+		};
 	}, [token, currentUser]);
 
 	async function addBook(
@@ -210,6 +227,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 			value={{
 				books,
 				requests,
+				notification,
 				addBook,
 				handleRequest,
 				handleAccept,

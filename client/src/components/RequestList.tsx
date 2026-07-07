@@ -42,8 +42,8 @@ function RequestList() {
 					</p>
 				</div>
 			) : (
-				<div className="flex flex-col gap-gap-xs">
-					{requests.slice(0, 4).map((r) => (
+				<div className="flex flex-col gap-gap-xs overflow-y-auto max-h-[400px] scrollbar-hide">
+					{requests.map((r) => (
 						<div
 							key={r.id}
 							className="bg-surface rounded-control shadow-sm p-inset-sm flex items-center gap-gap-sm"
@@ -144,11 +144,11 @@ function RequestList() {
 				</div>
 			)}
 
-			{requests.length > 4 && (
+			{/* {requests.length > 4 && (
 				<p className="text-caption font-semibold text-primary mt-gap-sm cursor-pointer">
 					View all ({requests.length}) →
 				</p>
-			)}
+			)} */}
 		</div>
 	);
 }
