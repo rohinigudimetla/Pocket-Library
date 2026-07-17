@@ -8,8 +8,7 @@ function SearchBooks() {
 	const [query, setQuery] = useState("");
 	const [isOpen, setIsOpen] = useState(false);
 	const { currentUser } = useAuth();
-	const { handleRequest, addBook, requests, handleCancelRequest } =
-		useAppContext();
+	const { handleRequest, addBook, requests } = useAppContext();
 	const debouncedQuery = useDebounce(query, 500);
 	const searchUrl =
 		debouncedQuery.length >= 3
@@ -33,9 +32,7 @@ function SearchBooks() {
 
 	function getRequestStatus(title: string) {
 		if (!currentUser) return null;
-		const existing = requests.find(
-			(r) => r.title === title && r.requestedBy === currentUser.name,
-		);
+		const existing = requests.find((r) => r.title === title);
 		return existing?.status ?? null;
 	}
 
@@ -159,23 +156,38 @@ function SearchBooks() {
 									</div>
 
 									{currentUser?.role === "reader" &&
-										(status === "pending" ? (
-											<button
-												onClick={() => handleCancelRequest(title)}
-												className="badge-pending flex-shrink-0 cursor-pointer border-none"
-											>
+										// (status === "PENDING" ? (
+										// 	<button
+										// 		onClick={() => handleCancelRequest(title)}
+										// 		className="badge-pending flex-shrink-0 cursor-pointer border-none"
+										// 	>
+										// 		Pending
+										// 	</button>
+										// ) : (
+										// 	<button
+										// 		onClick={() =>
+										// 			handleRequest(
+										// 				title,
+										// 				author,
+										// 				coverId,
+										// 				totalPages,
+										// 				currentUser.name,
+										// 			)
+										// 		}
+										// 		className="text-caption font-medium text-primary-strong bg-surface-page border-[1.5px] border-border-warm rounded-pill px-[10px] py-[4px] flex-shrink-0 cursor-pointer hover:bg-surface-warm transition-colors"
+										// 	>
+										// 		Request
+										// 	</button>
+										// ))}
+
+										(status === "PENDING" ? (
+											<span className="badge-pending flex-shrink-0">
 												Pending
-											</button>
+											</span>
 										) : (
 											<button
 												onClick={() =>
-													handleRequest(
-														title,
-														author,
-														coverId,
-														totalPages,
-														currentUser.name,
-													)
+													handleRequest(title, author, coverId, totalPages)
 												}
 												className="text-caption font-medium text-primary-strong bg-surface-page border-[1.5px] border-border-warm rounded-pill px-[10px] py-[4px] flex-shrink-0 cursor-pointer hover:bg-surface-warm transition-colors"
 											>

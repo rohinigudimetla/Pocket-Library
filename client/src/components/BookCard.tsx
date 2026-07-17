@@ -10,7 +10,7 @@ interface BookCardProps extends Book {
 
 function BookCard({
 	title,
-	author,
+	// author,
 	totalPages,
 	id,
 	pagesRead,

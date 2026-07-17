@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import type { User } from "../types";
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
 // type User = {
 // 	name: string;
 // 	role: "reader" | "admin";
@@ -41,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [token, setToken] = useState<string | null>(null);
 
 	async function login(email: string, password: string): Promise<boolean> {
-		const response = await fetch("http://localhost:8080/api/auth/login", {
+		const response = await fetch(`${API_URL}/api/auth/login`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ username: email, password }),
@@ -69,7 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 	async function logout() {
 		if (token) {
-			await fetch("http://localhost:8080/api/auth/logout", {
+			await fetch(`${API_URL}/api/auth/logout`, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${token}`,

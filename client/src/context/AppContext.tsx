@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { Book, Request } from "../types";
 import { useAuth } from "./AuthContext";
-
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
 type PageResponse<T> = {
 	content: T[];
 };
@@ -51,7 +51,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 	useEffect(() => {
 		if (!token) return;
 
-		fetch("http://localhost:8080/api/books", {
+		fetch(`${API_URL}/api/books`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
@@ -66,8 +66,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
 		const endpoint =
 			currentUser.role === "admin"
-				? "http://localhost:8080/api/requests/pending"
-				: "http://localhost:8080/api/requests/mine";
+				? `${API_URL}/api/requests/pending`
+				: `${API_URL}/api/requests/mine`;
 
 		fetch(endpoint, {
 			headers: {
@@ -82,7 +82,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 	useEffect(() => {
 		if (!token || !currentUser) return;
 		const eventSource = new EventSource(
-			`http://localhost:8080/api/requests/notifications/stream?token=${token}`,
+			`${API_URL}/api/requests/notifications/stream?token=${token}`,
 		);
 		eventSource.onmessage = (event) => {
 			setNotification(event.data);
@@ -99,7 +99,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 		pageCount: number,
 		coverId: string | null,
 	) {
-		const response = await fetch("http://localhost:8080/api/books", {
+		const response = await fetch(`${API_URL}/api/books`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -141,7 +141,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 		coverId: string | null,
 		totalPages: number,
 	) {
-		const response = await fetch("http://localhost:8080/api/requests", {
+		const response = await fetch(`${API_URL}/api/requests`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -160,15 +160,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	async function handleAccept(id: number) {
-		const response = await fetch(
-			`http://localhost:8080/api/requests/${id}/accept`,
-			{
-				method: "PATCH",
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
+		const response = await fetch(`${API_URL}/api/requests/${id}/accept`, {
+			method: "PATCH",
+			headers: {
+				Authorization: `Bearer ${token}`,
 			},
-		);
+		});
 
 		if (!response.ok) {
 			console.error("Failed to accept request");
@@ -177,7 +174,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
 		setRequests((prev) => prev.filter((r) => r.id !== id));
 
-		fetch("http://localhost:8080/api/books", {
+		fetch(`${API_URL}/api/books`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
@@ -188,15 +185,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	async function handleDismiss(id: number) {
-		const response = await fetch(
-			`http://localhost:8080/api/requests/${id}/dismiss`,
-			{
-				method: "PATCH",
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
+		const response = await fetch(`${API_URL}/api/requests/${id}/dismiss`, {
+			method: "PATCH",
+			headers: {
+				Authorization: `Bearer ${token}`,
 			},
-		);
+		});
 
 		if (!response.ok) {
 			console.error("Failed to dismiss request");
@@ -207,7 +201,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	async function handleDelete(id: number) {
-		const response = await fetch(`http://localhost:8080/api/books/${id}`, {
+		const response = await fetch(`${API_URL}/api/books/${id}`, {
 			method: "DELETE",
 			headers: {
 				Authorization: `Bearer ${token}`,
