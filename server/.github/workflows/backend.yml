@@ -1,0 +1,90 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'server/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+      - name: Build JAR
+        run: |
+          cd server
+          mvn package -DskipTests
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Authenticate to ECR
+        run: |
+          aws ecr get-login-password --region us-east-1 \
+          | docker login \
+            --username AWS \
+            --password-stdin \
+            700693143866.dkr.ecr.us-east-1.amazonaws.com
+
+      - name: Build and tag Docker image
+        run: |
+          cd server
+          docker build \
+            -t pocketlibrary-server:latest \
+            -t pocketlibrary-server:${{ github.sha }} \
+            .
+
+      - name: Push to ECR
+        run: |
+          docker tag pocketlibrary-server:latest \
+            700693143866.dkr.ecr.us-east-1.amazonaws.com/pocketlibrary-server:latest
+          docker tag pocketlibrary-server:${{ github.sha }} \
+            700693143866.dkr.ecr.us-east-1.amazonaws.com/pocketlibrary-server:${{ github.sha }}
+          docker push \
+            700693143866.dkr.ecr.us-east-1.amazonaws.com/pocketlibrary-server:latest
+          docker push \
+            700693143866.dkr.ecr.us-east-1.amazonaws.com/pocketlibrary-server:${{ github.sha }}
+
+      - name: Write SSH private key
+        run: |
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" > private_key.pem
+          chmod 400 private_key.pem
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+              -i private_key.pem \
+              ec2-user@${{ secrets.EC2_HOST }} \
+          "aws ecr get-login-password --region us-east-1 \
+            | docker login \
+              --username AWS \
+              --password-stdin \
+              700693143866.dkr.ecr.us-east-1.amazonaws.com && \
+           docker stop pocketlibrary || true && \
+           docker rm pocketlibrary || true && \
+           docker pull \
+             700693143866.dkr.ecr.us-east-1.amazonaws.com/pocketlibrary-server:latest && \
+           docker run -d --name pocketlibrary \
+             -p 8080:8080 \
+             -e DB_URL='${{ secrets.DB_URL }}' \
+             -e DB_USERNAME='${{ secrets.DB_USERNAME }}' \
+             -e DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
+             -e REDIS_CLUSTER_NODES='${{ secrets.REDIS_CLUSTER_NODES }}' \
+             -e REDIS_TLS_ENABLED=true \
+             -e REDIS_CLUSTER_MAX_REDIRECTS=3 \
+             700693143866.dkr.ecr.us-east-1.amazonaws.com/pocketlibrary-server:latest"
