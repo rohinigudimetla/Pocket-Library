@@ -144,7 +144,9 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
 			{/* Desktop sidebar — always visible */}
 			<aside
 				className="grain w-sidebar-width flex-shrink-0 hidden md:flex flex-col py-inset-lg px-inset-md overflow-hidden"
-				style={{ background: "linear-gradient(180deg, #7B1835 0%, #641B2E 100%)" }}
+				style={{
+					background: "linear-gradient(180deg, #7B1835 0%, #641B2E 100%)",
+				}}
 			>
 				<SidebarContent />
 			</aside>
@@ -158,7 +160,9 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
 					/>
 					<aside
 						className="grain fixed inset-y-0 left-0 z-50 w-sidebar-width flex flex-col py-inset-lg px-inset-md overflow-hidden md:hidden"
-						style={{ background: "linear-gradient(180deg, #7B1835 0%, #641B2E 100%)" }}
+						style={{
+							background: "linear-gradient(180deg, #7B1835 0%, #641B2E 100%)",
+						}}
 					>
 						<SidebarContent onClose={onClose} />
 					</aside>

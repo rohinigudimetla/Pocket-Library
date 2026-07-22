@@ -14,7 +14,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
-
+// Module 14 CI/CD verification
 // This tells Spring that this class produces configuration objects
 // (beans) that the rest of the application will use. Different from
 // @Component because this class's whole job is to build setup, not to
