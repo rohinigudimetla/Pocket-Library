@@ -1,6 +1,7 @@
 package com.pocketlibrary.server.security;
 
 import com.pocketlibrary.server.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -52,6 +53,13 @@ public class SecurityConfig {
                 // token, every single time. Nothing is remembered in between.
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(
+                                (request, response, authException) ->
+                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+                        )
+                )
 
                 // The actual access rules, checked in order from top to bottom.
                 .authorizeHttpRequests(auth -> auth
