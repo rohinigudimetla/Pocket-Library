@@ -33,6 +33,6 @@ that did not need any of it. That is the point.
 | 12     | Redis           | [module-12-redis.md](./decisions/module-12-redis.md)                         | ✅ Complete |
 | 13     | AWS             | [module-13-aws.md](./decisions/module-13-aws.md)                             | ✅ Complete |
 | 14     | CI/CD           | [module-14-cicd.md](./decisions/module-14-cicd.md)                           | ✅ Complete |
-| 15     | Testing         |                                                                              | ⏳ Pending  |
+| 15     | Testing         | [module-15-testing.md](./decisions/module-15-testing.md)                     | ✅ Complete |
 | 16     | Security        |                                                                              | ⏳ Pending  |
 | 17     | System Design   |                                                                              | ⏳ Pending  |
