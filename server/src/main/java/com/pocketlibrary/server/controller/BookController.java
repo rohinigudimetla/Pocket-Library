@@ -1,9 +1,11 @@
 package com.pocketlibrary.server.controller;
 
+import com.pocketlibrary.server.dto.BookRequest;
 import com.pocketlibrary.server.model.Book;
 import com.pocketlibrary.server.model.User;
 import com.pocketlibrary.server.repository.UserRepository;
 import com.pocketlibrary.server.service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -80,28 +82,20 @@ public class BookController {
     // this lines up with JwtFilter, which sets authorities as
     // "ROLE_" + role.
     @PreAuthorize("hasRole('ADMIN')")
-    // POST /api/books
-    // @RequestBody tells Spring to read the JSON from the request body
-    // and convert it into a Book object automatically.
-    // Returns the saved book with status 201 (Created).
     @PostMapping
-    public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        // SecurityContextHolder holds the identity JwtFilter wrote in
-        // when this request's token was validated. getName() returns
-        // the username, the same value passed into generateToken()
-        // back in JwtService.
+    public ResponseEntity<Book> addBook(@Valid @RequestBody BookRequest request) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        // Look up the real User row matching that username, so the
-        // book can be attached to an actual database row, not just a
-        // string. orElseThrow is used here because reaching this line
-        // with no matching user would mean a valid token exists for a
-        // user that no longer exists in the database, a genuine
-        // inconsistency worth failing loudly on rather than silently.
         User currentUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
 
+        Book book = new Book();
+        book.setTitle(request.getTitle());
+        book.setAuthor(request.getAuthor());
+        book.setTotalPages(request.getTotalPages());
+        book.setCoverId(request.getCoverId());
+        book.setPagesRead(0);
         book.setUser(currentUser);
+
         Book saved = bookService.addBook(book);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
