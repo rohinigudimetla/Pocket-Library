@@ -106,7 +106,7 @@ class BookControllerTest {
         mockMvc.perform(post("/api/books")
                         .header("Authorization", "Bearer " + adminToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"Dune\",\"totalPages\":1,\"pagesRead\":0}"))
+                        .content("{\"title\":\"Dune\",\"author\":\"Frank Herbert\",\"totalPages\":1,\"pagesRead\":0}"))
                 .andExpect(status().isCreated());
     }
 
