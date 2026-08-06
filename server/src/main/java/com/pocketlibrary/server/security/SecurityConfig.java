@@ -11,6 +11,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.security.config.Customizer;
 
 import java.util.List;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -81,7 +83,16 @@ public class SecurityConfig {
                 // Insert our filter into the chain, placing it to run before
                 // Spring's own built-in login-form filter. This guarantees
                 // our token check happens first, on every request.
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        .headers(headers -> headers
+                .contentSecurityPolicy(csp ->
+                        csp.policyDirectives("default-src 'self'"))
+                .frameOptions(frame ->
+                        frame.deny())
+                .contentTypeOptions(Customizer.withDefaults())
+                .referrerPolicy(referrer ->
+                        referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER))
+        );
 
         // Hand back the finished rulebook.
         return http.build();
