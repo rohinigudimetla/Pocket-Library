@@ -34,5 +34,5 @@ that did not need any of it. That is the point.
 | 13     | AWS             | [module-13-aws.md](./decisions/module-13-aws.md)                             | ✅ Complete |
 | 14     | CI/CD           | [module-14-cicd.md](./decisions/module-14-cicd.md)                           | ✅ Complete |
 | 15     | Testing         | [module-15-testing.md](./decisions/module-15-testing.md)                     | ✅ Complete |
-| 16     | Security        |                                                                              | ⏳ Pending  |
+| 16     | Security        | [module-16-security.md](./decisions/module-16-security.md)                   | ✅ Complete |
 | 17     | System Design   |                                                                              | ⏳ Pending  |
