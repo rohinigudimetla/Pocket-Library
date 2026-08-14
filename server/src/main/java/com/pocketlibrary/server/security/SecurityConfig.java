@@ -68,6 +68,7 @@ public class SecurityConfig {
                         // Anyone, logged in or not, can reach the login endpoint.
                         // This has to be open, because you need a token from here
                         // before you can prove who you are anywhere else.
+                        .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/requests/notifications/stream").permitAll()
 
