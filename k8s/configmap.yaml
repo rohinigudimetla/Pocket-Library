@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pocketlibrary-config
+data:
+  REDIS_TLS_ENABLED: "true"
+  REDIS_CLUSTER_MAX_REDIRECTS: "3"
