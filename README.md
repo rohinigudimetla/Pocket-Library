@@ -35,4 +35,4 @@ that did not need any of it. That is the point.
 | 14     | CI/CD           | [module-14-cicd.md](./decisions/module-14-cicd.md)                           | ✅ Complete |
 | 15     | Testing         | [module-15-testing.md](./decisions/module-15-testing.md)                     | ✅ Complete |
 | 16     | Security        | [module-16-security.md](./decisions/module-16-security.md)                   | ✅ Complete |
-| 17     | System Design   |                                                                              | ⏳ Pending  |
+| 17     | System Design   | [module-17-kubernetes.md](./decisions/module-17-kubernetes.md)               | ✅ Complete |
