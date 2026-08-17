@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pocketlibrary-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pocketlibrary-server
+  template:
+    metadata:
+      labels:
+        app: pocketlibrary-server
+    spec:
+      containers:
+        - name: pocketlibrary-server
+          image: 700693143866.dkr.ecr.us-east-1.amazonaws.com/pocketlibrary-server:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: pocketlibrary-secrets
+            - configMapRef:
+                name: pocketlibrary-config
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 3
