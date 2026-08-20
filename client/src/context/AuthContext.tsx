@@ -1,45 +1,72 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import type { User } from "../types";
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
-// type User = {
-// 	name: string;
-// 	role: "reader" | "admin";
-// };
-
-// const hardcodedUsers = [
-// 	{
-// 		email: "r@p",
-// 		password: "r",
-// 		name: "Rohini",
-// 		role: "reader" as const,
-// 	},
-// 	{
-// 		email: "a@p",
-// 		password: "a",
-// 		name: "Admin",
-// 		role: "admin" as const,
-// 	},
-// ];
 
 const AuthContext = createContext<{
 	currentUser: User | null;
 	token: string | null;
+	isLoading: boolean;
 	login: (email: string, password: string) => Promise<boolean>;
 	logout: () => Promise<void>;
+	refreshAccessToken: () => Promise<string | null>;
 }>({
 	currentUser: null,
 	token: null,
+	isLoading: true,
 	login: async () => false,
 	logout: async () => {},
+	refreshAccessToken: async () => null,
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [currentUser, setCurrentUser] = useState<User | null>(null);
-	// The token is held in plain React state, not localStorage. localStorage
-	// is readable by any script running on the page, which makes it a
-	// target for XSS. Keeping it in state means a page refresh clears it,
-	// which is an accepted tradeoff for this module.
 	const [token, setToken] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		const storedToken = sessionStorage.getItem("accessToken");
+		const storedRefresh = sessionStorage.getItem("refreshToken");
+
+		if (storedToken && storedRefresh && storedRefresh !== "undefined") {
+			const payload = JSON.parse(atob(storedToken.split(".")[1]));
+			const isExpired = payload.exp * 1000 < Date.now();
+
+			if (!isExpired) {
+				setToken(storedToken);
+				setCurrentUser({
+					name: payload.sub,
+					role: payload.role.toLowerCase() as "reader" | "admin",
+				});
+			} else {
+				sessionStorage.removeItem("accessToken");
+				sessionStorage.removeItem("refreshToken");
+			}
+		}
+		setIsLoading(false);
+	}, []);
+
+	async function refreshAccessToken(): Promise<string | null> {
+		const storedRefresh = sessionStorage.getItem("refreshToken");
+		if (!storedRefresh) return null;
+
+		const response = await fetch(`${API_URL}/api/auth/refresh`, {
+			method: "POST",
+			headers: { Authorization: `Bearer ${storedRefresh}` },
+		});
+
+		if (!response.ok) {
+			setCurrentUser(null);
+			setToken(null);
+			sessionStorage.removeItem("accessToken");
+			sessionStorage.removeItem("refreshToken");
+			return null;
+		}
+
+		const data = await response.json();
+		setToken(data.token);
+		sessionStorage.setItem("accessToken", data.token);
+		return data.token;
+	}
 
 	async function login(email: string, password: string): Promise<boolean> {
 		const response = await fetch(`${API_URL}/api/auth/login`, {
@@ -48,17 +75,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			body: JSON.stringify({ username: email, password }),
 		});
 
-		if (!response.ok) {
-			return false;
-		}
+		if (!response.ok) return false;
 
 		const data = await response.json();
 		setToken(data.token);
+		sessionStorage.setItem("accessToken", data.token);
+		sessionStorage.setItem("refreshToken", data.refreshToken);
 
-		// The server's token carries the role, but the frontend still needs
-		// a display name and a role to render the UI correctly. Decoding
-		// the role straight out of the JWT payload is the simplest path
-		// here, without adding a library just to read one field.
 		const payload = JSON.parse(atob(data.token.split(".")[1]));
 		setCurrentUser({
 			name: email,
@@ -72,17 +95,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		if (token) {
 			await fetch(`${API_URL}/api/auth/logout`, {
 				method: "POST",
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
+				headers: { Authorization: `Bearer ${token}` },
 			});
 		}
 		setCurrentUser(null);
 		setToken(null);
+		sessionStorage.removeItem("accessToken");
+		sessionStorage.removeItem("refreshToken");
 	}
 
 	return (
-		<AuthContext.Provider value={{ currentUser, token, login, logout }}>
+		<AuthContext.Provider
+			value={{
+				currentUser,
+				token,
+				isLoading,
+				login,
+				logout,
+				refreshAccessToken,
+			}}
+		>
 			{children}
 		</AuthContext.Provider>
 	);
@@ -91,4 +123,5 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
 	return useContext(AuthContext);
 }
+
 export default AuthContext;

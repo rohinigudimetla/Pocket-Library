@@ -14,6 +14,7 @@ public class JwtService {
     private final RedisTemplate<String, String> redisTemplate;
     private Key secretKey;
     private final long EXPIRY_MS = 1000 * 60 * 60 * 10;
+    private final long REFRESH_EXPIRY_MS = 1000L * 60 * 60 * 24 * 7;
 
     public JwtService(RedisTemplate<String, String> redisTemplate){
         this.redisTemplate = redisTemplate;
@@ -21,7 +22,6 @@ public class JwtService {
     }
 
     private Key loadOrGenerateKey(){
-
         String stored = redisTemplate.opsForValue().get("jwt:signing-key");
         if (stored != null){
             byte[] keyBytes = Base64.getDecoder().decode(stored);
@@ -37,8 +37,20 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role", role)
+                .claim("type", "access")
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis()+EXPIRY_MS))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRY_MS))
+                .signWith(secretKey)
+                .compact();
+    }
+
+    public String generateRefreshToken(String username, String role) {
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("role", role)
+                .claim("type", "refresh")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRY_MS))
                 .signWith(secretKey)
                 .compact();
     }
@@ -59,6 +71,15 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("role", String.class);
+    }
+
+    public String extractType(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("type", String.class);
     }
 
     public boolean isTokenValid(String token) {
@@ -82,6 +103,4 @@ public class JwtService {
                 .getExpiration();
         return (expiration.getTime() - System.currentTimeMillis()) / 1000;
     }
-
-
 }

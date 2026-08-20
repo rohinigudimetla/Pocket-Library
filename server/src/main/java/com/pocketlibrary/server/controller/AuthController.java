@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 public class AuthController {
 
     private final AuthService authService;
-
     private final RedisTemplate<String, String> redisTemplate;
     private final JwtService jwtService;
 
@@ -25,15 +24,45 @@ public class AuthController {
         this.redisTemplate = redisTemplate;
         this.jwtService = jwtService;
     }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        Optional<String> token = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        Optional<Map<String, String>> tokens = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
 
-        if (token.isPresent()) {
-            return ResponseEntity.ok(Map.of("token", token.get()));
+        if (tokens.isPresent()) {
+            return ResponseEntity.ok(tokens.get());
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid username or password"));
         }
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String refreshToken = authHeader.substring(7);
+
+        if (!jwtService.isTokenValid(refreshToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String type = jwtService.extractType(refreshToken);
+        if (!"refresh".equals(type)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Boolean isBlacklisted = redisTemplate.opsForSet().isMember("jwt:blacklist", refreshToken);
+        if (Boolean.TRUE.equals(isBlacklisted)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String username = jwtService.extractUsername(refreshToken);
+        String role = jwtService.extractRole(refreshToken);
+        String newAccessToken = jwtService.generateToken(username, role);
+
+        return ResponseEntity.ok(Map.of("token", newAccessToken));
     }
 
     @PostMapping("/logout")

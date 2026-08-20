@@ -6,6 +6,7 @@ import com.pocketlibrary.server.security.JwtService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -21,7 +22,7 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Optional<String> login(String username, String password) {
+    public Optional<Map<String, String>> login(String username, String password) {
         Optional<User> userOptional = userRepository.findByUsername(username);
 
         if (userOptional.isEmpty()) {
@@ -34,7 +35,12 @@ public class AuthService {
             return Optional.empty();
         }
 
-        String token = jwtService.generateToken(user.getUsername(), user.getRole());
-        return Optional.of(token);
+        String accessToken = jwtService.generateToken(user.getUsername(), user.getRole());
+        String refreshToken = jwtService.generateRefreshToken(user.getUsername(), user.getRole());
+
+        return Optional.of(Map.of(
+                "token", accessToken,
+                "refreshToken", refreshToken
+        ));
     }
 }
