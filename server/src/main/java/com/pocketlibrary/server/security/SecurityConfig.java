@@ -82,7 +82,7 @@ public class SecurityConfig {
                         // in, regardless of role.
                         .anyRequest().authenticated()
                 )
-
+                //comment for deployment trigger
                 // Insert our filter into the chain, placing it to run before
                 // Spring's own built-in login-form filter. This guarantees
                 // our token check happens first, on every request.
