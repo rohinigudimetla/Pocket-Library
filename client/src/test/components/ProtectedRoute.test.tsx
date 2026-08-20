@@ -8,8 +8,10 @@ const mockAuthContext = (
 ) => ({
 	currentUser,
 	token: currentUser ? "fake-token" : null,
+	isLoading: false,
 	login: async () => false,
 	logout: async () => {},
+	refreshAccessToken: async () => null,
 });
 
 function renderWithRouter(

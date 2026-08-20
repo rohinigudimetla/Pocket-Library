@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,11 +46,13 @@ class AuthServiceTest {
 
         when(userRepository.findByUsername("rohini")).thenReturn(Optional.of(user));
         when(jwtService.generateToken("rohini", "ADMIN")).thenReturn("faketoken");
+        when(jwtService.generateRefreshToken("rohini", "ADMIN")).thenReturn("fakerefreshtoken");
 
-        Optional<String> result = authService.login("rohini", rawPassword);
+        Optional<Map<String, String>> result = authService.login("rohini", rawPassword);
 
         assertTrue(result.isPresent());
-        assertEquals("faketoken", result.get());
+        assertEquals("faketoken", result.get().get("token"));
+        assertEquals("fakerefreshtoken", result.get().get("refreshToken"));
     }
 
     @Test
@@ -63,7 +66,7 @@ class AuthServiceTest {
 
         when(userRepository.findByUsername("rohini")).thenReturn(Optional.of(user));
 
-        Optional<String> result = authService.login("rohini", "wrongpassword");
+        Optional<Map<String, String>> result = authService.login("rohini", "wrongpassword");
 
         assertFalse(result.isPresent());
         verify(jwtService, never()).generateToken(any(), any());
@@ -73,7 +76,7 @@ class AuthServiceTest {
     void loginReturnsEmptyWhenUserNotFound() {
         when(userRepository.findByUsername("ghost")).thenReturn(Optional.empty());
 
-        Optional<String> result = authService.login("ghost", "password");
+        Optional<Map<String, String>> result = authService.login("ghost", "password");
 
         assertFalse(result.isPresent());
         verify(jwtService, never()).generateToken(any(), any());
