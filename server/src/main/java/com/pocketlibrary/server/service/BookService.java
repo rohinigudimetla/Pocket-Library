@@ -107,4 +107,18 @@ public class BookService {
         redisTemplate.delete("books:cache");
         return true;
     }
+
+    public Optional<Book> updateBook(Long id, Integer pagesRead, Integer totalPages) {
+        return bookRepository.findById(id).map(book -> {
+            if (pagesRead != null) {
+                book.setPagesRead(pagesRead);
+            }
+            if (totalPages != null) {
+                book.setTotalPages(totalPages);
+            }
+            Book saved = bookRepository.save(book);
+            redisTemplate.delete("books:cache");
+            return saved;
+        });
+    }
 }

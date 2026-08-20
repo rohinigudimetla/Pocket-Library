@@ -24,13 +24,13 @@ function BookCard({
 	const pct = totalPages > 0 ? Math.round((pagesRead / totalPages) * 100) : 0;
 
 	function increment() {
-		updateBookProgress(title, Math.min(totalPages, pagesRead + 1));
+		updateBookProgress(id, Math.min(totalPages, pagesRead + 1));
 	}
 	function decrement() {
-		updateBookProgress(title, Math.max(0, pagesRead - 1));
+		updateBookProgress(id, Math.max(0, pagesRead - 1));
 	}
 	function reset() {
-		updateBookProgress(title, 0);
+		updateBookProgress(id, 0);
 	}
 
 	return (
@@ -100,7 +100,7 @@ function BookCard({
 						value={pagesRead}
 						onChange={(e) =>
 							updateBookProgress(
-								title,
+								id,
 								Math.max(0, Math.min(totalPages, Number(e.target.value))),
 							)
 						}
@@ -113,7 +113,7 @@ function BookCard({
 						value={totalPages || ""}
 						placeholder="?"
 						onChange={(e) =>
-							updateTotalPages(title, Math.max(1, Number(e.target.value)))
+							updateTotalPages(id, Math.max(1, Number(e.target.value)))
 						}
 						className="w-[48px] text-caption text-ink bg-surface-page border-[1.5px] border-border-warm rounded-control px-[6px] py-[2px] outline-none focus:border-border-strong text-center"
 					/>

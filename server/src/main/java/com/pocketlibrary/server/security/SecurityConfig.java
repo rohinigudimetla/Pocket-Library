@@ -16,6 +16,7 @@ import org.springframework.security.config.Customizer;
 
 import java.util.List;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 // Module 14 CI/CD verification
 // This tells Spring that this class produces configuration objects
@@ -30,11 +31,12 @@ public class SecurityConfig {
     // because it is marked @Component, the same way it gets handed into
     // other classes that need it.
     private final JwtFilter jwtFilter;
+    private final LoginRateLimitFilter loginRateLimitFilter;
 
-    public SecurityConfig(JwtFilter jwtFilter) {
+    public SecurityConfig(JwtFilter jwtFilter, LoginRateLimitFilter loginRateLimitFilter) {
         this.jwtFilter = jwtFilter;
+        this.loginRateLimitFilter = loginRateLimitFilter;
     }
-
     // This method builds and returns the actual rulebook Spring Security
     // will use for every request. @Bean means: Spring runs this once at
     // startup and keeps the result available for the whole application.
@@ -84,6 +86,7 @@ public class SecurityConfig {
                 // Insert our filter into the chain, placing it to run before
                 // Spring's own built-in login-form filter. This guarantees
                 // our token check happens first, on every request.
+                .addFilterBefore(loginRateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .headers(headers -> headers
                 .contentSecurityPolicy(csp ->
@@ -114,8 +117,13 @@ public class SecurityConfig {
         configuration.setAllowedHeaders(List.of("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Apply this exact rule to every endpoint in the application.
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 }

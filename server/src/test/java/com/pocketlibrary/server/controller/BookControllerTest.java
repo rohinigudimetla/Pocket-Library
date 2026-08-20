@@ -134,4 +134,77 @@ class BookControllerTest {
                         .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void updateBookShouldReturn200ForReaderRole() throws Exception {
+        Book updatedBook = new Book();
+        updatedBook.setId(1L);
+        updatedBook.setPagesRead(50);
+
+        when(bookService.updateBook(1L, 50, null))
+                .thenReturn(java.util.Optional.of(updatedBook));
+
+        mockMvc.perform(patch("/api/books/1")
+                        .header("Authorization", "Bearer " + readerToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"pagesRead\":50}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateBookShouldOnlyUpdatePagesReadWhenOnlyThatFieldIsSent() throws Exception {
+        Book updatedBook = new Book();
+        updatedBook.setId(1L);
+        updatedBook.setPagesRead(75);
+
+        when(bookService.updateBook(1L, 75, null))
+                .thenReturn(java.util.Optional.of(updatedBook));
+
+        mockMvc.perform(patch("/api/books/1")
+                        .header("Authorization", "Bearer " + readerToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"pagesRead\":75}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.pagesRead").value(75));
+
+        verify(bookService).updateBook(1L, 75, null);
+    }
+
+    @Test
+    void updateBookShouldOnlyUpdateTotalPagesWhenOnlyThatFieldIsSent() throws Exception {
+        Book updatedBook = new Book();
+        updatedBook.setId(1L);
+        updatedBook.setTotalPages(300);
+
+        when(bookService.updateBook(1L, null, 300))
+                .thenReturn(java.util.Optional.of(updatedBook));
+
+        mockMvc.perform(patch("/api/books/1")
+                        .header("Authorization", "Bearer " + readerToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"totalPages\":300}"))
+                .andExpect(status().isOk());
+
+        verify(bookService).updateBook(1L, null, 300);
+    }
+
+    @Test
+    void updateBookShouldReturn404WhenNotFound() throws Exception {
+        when(bookService.updateBook(99L, 10, null))
+                .thenReturn(java.util.Optional.empty());
+
+        mockMvc.perform(patch("/api/books/99")
+                        .header("Authorization", "Bearer " + readerToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"pagesRead\":10}"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateBookShouldReturn401WhenNoToken() throws Exception {
+        mockMvc.perform(patch("/api/books/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"pagesRead\":10}"))
+                .andExpect(status().isUnauthorized());
+    }
 }

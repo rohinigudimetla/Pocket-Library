@@ -25,8 +25,8 @@ type AppContextType = {
 	handleAccept: (id: number) => void;
 	handleDismiss: (id: number) => void;
 	handleDelete: (id: number) => void;
-	updateBookProgress: (title: string, pagesRead: number) => void;
-	updateTotalPages: (title: string, totalPages: number) => void;
+	updateBookProgress: (id: number, pagesRead: number) => void;
+	updateTotalPages: (id: number, totalPages: number) => void;
 };
 
 const AppContext = createContext<AppContextType>({
@@ -123,16 +123,42 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 		setBooks((prev) => [...prev, savedBook]);
 	}
 
-	function updateBookProgress(title: string, pagesRead: number) {
-		setBooks((prev) =>
-			prev.map((b) => (b.title === title ? { ...b, pagesRead } : b)),
-		);
+	async function updateBookProgress(id: number, pagesRead: number) {
+		const response = await fetch(`${API_URL}/api/books/${id}`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify({ pagesRead }),
+		});
+
+		if (!response.ok) {
+			console.error("Failed to update book progress");
+			return;
+		}
+
+		const updatedBook = await response.json();
+		setBooks((prev) => prev.map((b) => (b.id === id ? updatedBook : b)));
 	}
 
-	function updateTotalPages(title: string, totalPages: number) {
-		setBooks((prev) =>
-			prev.map((b) => (b.title === title ? { ...b, totalPages } : b)),
-		);
+	async function updateTotalPages(id: number, totalPages: number) {
+		const response = await fetch(`${API_URL}/api/books/${id}`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify({ totalPages }),
+		});
+
+		if (!response.ok) {
+			console.error("Failed to update total pages");
+			return;
+		}
+
+		const updatedBook = await response.json();
+		setBooks((prev) => prev.map((b) => (b.id === id ? updatedBook : b)));
 	}
 
 	async function handleRequest(

@@ -1,6 +1,7 @@
 package com.pocketlibrary.server.controller;
 
 import com.pocketlibrary.server.dto.BookRequest;
+import com.pocketlibrary.server.dto.BookUpdateRequest;
 import com.pocketlibrary.server.model.Book;
 import com.pocketlibrary.server.model.User;
 import com.pocketlibrary.server.repository.UserRepository;
@@ -100,16 +101,22 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    // Same reasoning as addBook() above — only an ADMIN can delete.
     @PreAuthorize("hasRole('ADMIN')")
-    // DELETE /api/books/{id}
-    // If the book was found and deleted, returns 204 (No Content).
-    // If the book was not found, returns 404.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         boolean deleted = bookService.deleteBook(id);
         return deleted
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Book> updateBook(
+            @PathVariable Long id,
+            @Valid @RequestBody BookUpdateRequest request
+    ) {
+        return bookService.updateBook(id, request.getPagesRead(), request.getTotalPages())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
