@@ -5,6 +5,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
 import NotificationToast from "./components/NotificationToast";
+import RequestsPage from "./pages/RequestsPage";
 
 function App() {
 	return (
@@ -25,6 +26,15 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<BookDetailPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route path="*" element={<NotFoundPage />} />
+				<Route
+					path="/requests"
+					element={
+						<ProtectedRoute>
+							<RequestsPage />
 						</ProtectedRoute>
 					}
 				/>
